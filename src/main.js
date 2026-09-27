@@ -31,16 +31,16 @@ function tagsRow(tags)
     return `<div class="tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>`
 }
 
-function photosButton(photos)
+function photoStrip(photos)
 {
-    return photos && photos.length ? '<button type="button" class="view-photos">View photos ▸</button>' : ''
+    if(!photos || !photos.length) return ''
+    return `<div class="photo-strip">${photos.map((src, i) => `<img src="${esc(src)}" data-i="${i}" alt="">`).join('')}</div>`
 }
 
-function wirePhotos(container, photos)
+function wirePhotoStrip(container, photos)
 {
     if(!photos || !photos.length) return
-    const btn = container.querySelector('.view-photos')
-    if(btn) btn.onclick = () => openLightbox(photos)
+    $$('.photo-strip img', container).forEach((img) => { img.onclick = () => openLightbox(photos, +img.dataset.i) })
 }
 
 function renderProject(p)
@@ -57,9 +57,9 @@ function renderProject(p)
         <ul>${(p.facts || []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
         ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
-        ${photosButton(p.photos)}
+        ${photoStrip(p.photos)}
     `
-    wirePhotos(e, p.photos)
+    wirePhotoStrip(e, p.photos)
     return e
 }
 
@@ -73,10 +73,51 @@ function renderRole(r)
         ${r.meta ? `<p class="meta">${esc(r.meta)}</p>` : ''}
         ${body}${bullets}
         ${tagsRow(r.tags)}
-        ${photosButton(r.photos)}
+        ${photoStrip(r.photos)}
     `
-    wirePhotos(e, r.photos)
+    wirePhotoStrip(e, r.photos)
     return e
+}
+
+// ---------- carousel (Experience, Leadership): a row of cards you page through, like a "where I've worked" strip ----------
+
+function renderCard(r)
+{
+    const e = el('article', 'card')
+    const body = r.body ? `<p class="body">${esc(r.body)}</p>` : ''
+    const bullets = r.bullets ? `<ul>${r.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''
+    e.innerHTML = `
+        <h3>${esc(r.title)}</h3>
+        ${r.meta ? `<p class="meta">${esc(r.meta)}</p>` : ''}
+        <div class="clamp">${body}${bullets}</div>
+        ${tagsRow(r.tags)}
+        ${photoStrip(r.photos)}
+    `
+    wirePhotoStrip(e, r.photos)
+    const clamp = $('.clamp', e)
+    requestAnimationFrame(() => {
+        if(clamp.scrollHeight > clamp.clientHeight + 2) {
+            const more = el('button', 'see-more', 'see more ▾')
+            more.type = 'button'
+            more.onclick = () => { const open = e.classList.toggle('expanded'); more.textContent = open ? 'see less ▴' : 'see more ▾' }
+            clamp.after(more)
+        }
+    })
+    return e
+}
+
+function carousel(items, renderer)
+{
+    const wrap = el('div', 'carousel-wrap')
+    const controls = el('div', 'carousel-controls', '<button type="button" class="prev" aria-label="Scroll left">‹</button><button type="button" class="next" aria-label="Scroll right">›</button>')
+    const row = el('div', 'carousel')
+    items.forEach((it) => row.appendChild(renderer(it)))
+    wrap.appendChild(controls)
+    wrap.appendChild(row)
+    const step = () => (row.firstElementChild?.getBoundingClientRect().width || 300) + 16
+    $('.prev', controls).onclick = () => row.scrollBy({ left: -step(), behavior: 'smooth' })
+    $('.next', controls).onclick = () => row.scrollBy({ left: step(), behavior: 'smooth' })
+    return wrap
 }
 
 // ---------- photo lightbox (slideshow: prev/next, counter, esc/backdrop to close) ----------
@@ -232,8 +273,8 @@ function build()
     const content = $('#content')
     content.appendChild(renderHero())
     content.appendChild(section('projects', 'Projects', list(projects, renderProject)))
-    content.appendChild(section('experience', 'Experience', list(experience, renderRole)))
-    content.appendChild(section('leadership', 'Leadership', list(leadership, renderRole)))
+    content.appendChild(section('experience', 'Experience', carousel(experience, renderCard)))
+    content.appendChild(section('leadership', 'Leadership', carousel(leadership, renderCard)))
     content.appendChild(section('honors', 'Honors', renderHonors()))
     content.appendChild(section('skills', 'Skills', renderSkills()))
     content.appendChild(section('writing', 'Writing & press', renderWriting()))
@@ -261,7 +302,7 @@ function $$(sel, root = document) { return [...root.querySelectorAll(sel)] }
 function revealOnScroll()
 {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const entries = $$('.entry')
+    const entries = $$('.entry, .card')
     if(reduced || !('IntersectionObserver' in window)) { entries.forEach((e) => e.classList.add('visible')); return }
     const io = new IntersectionObserver((hits) => {
         hits.forEach((hit) => { if(hit.isIntersecting) { hit.target.classList.add('visible'); io.unobserve(hit.target) } })
