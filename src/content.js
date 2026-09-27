@@ -26,7 +26,6 @@ export const channels = [
         id: 'about', place: 'tower', label: 'About', screen: 'bigScreen', accent: '#00e5ff', kicker: 'IDENTITY', hero: true,
         tagline: 'Minimizing structural violence with technology and speech.',
         stats: [
-            { n: 1000, pre: '~', suf: '', t: 'monthly users at its peak: OpenCouncil, Paris TX council summaries' },
             { n: 1000, t: 'members in Olympiads Democratized' },
             { n: 1000, t: 'hygiene products given out in Paris, TX' },
             { n: 500000, t: 'potential users reached organically at SYNK' },
