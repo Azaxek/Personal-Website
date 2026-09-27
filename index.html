@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjan's Ramen · Portfolio</title>
+    <meta name="description" content="A portfolio served as a ramen shop. Sit down, order a dish, and meet the projects behind it.">
+    <meta name="theme-color" content="#120a1e">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%9C%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+    <canvas class="webgl" aria-label="3D ramen shop: a chef behind a counter of dishes, each dish is a project"></canvas>
+
+    <div id="loading" role="status">
+        <div class="pot"><i></i><i></i><i></i></div>
+        <p>Simmering the broth…</p>
+    </div>
+
+    <header id="hud" hidden>
+        <span class="brand"></span>
+        <div class="tools">
+            <button id="hubBtn" type="button" hidden>⌂ Signpost</button>
+            <button id="menuBtn" type="button" hidden>Menu</button>
+            <button id="soundBtn" type="button" aria-pressed="false">Sound off</button>
+        </div>
+    </header>
+
+    <div id="bubble" hidden role="status" aria-live="polite">
+        <b class="who"></b>
+        <span class="text"></span>
+        <button class="skip" type="button">Skip ▸</button>
+    </div>
+
+    <div id="hint" hidden>
+        <p class="caption" aria-live="polite">Click a sign on the post to explore</p>
+        <div class="chips"></div>
+    </div>
+
+    <aside id="menu" hidden aria-label="Menu"></aside>
+    <aside id="panel" hidden role="dialog" aria-modal="false"></aside>
+    <button id="skipCook" type="button" hidden>Skip the wait ▸</button>
+
+    <div id="game" hidden role="dialog" aria-modal="true" aria-label="Arcade game">
+        <div class="game-bar">
+            <b class="game-title"></b>
+            <span class="game-note">third-party game</span>
+            <a class="game-open" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+            <button class="game-close" type="button">Close ✕</button>
+        </div>
+        <div class="game-body">
+            <div class="gate">
+                <span class="chip">▮ HEADS UP</span>
+                <h2 class="gate-title"></h2>
+                <p class="gate-by"></p>
+                <p>This game runs on its own website, inside a window here. It has ads, and it puts you in public online lobbies with other people, so treat it like any other website you would open.</p>
+                <button class="btn load" type="button">Load the game</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
