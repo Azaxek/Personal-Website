@@ -31,6 +31,18 @@ function tagsRow(tags)
     return `<div class="tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>`
 }
 
+function photosButton(photos)
+{
+    return photos && photos.length ? '<button type="button" class="view-photos">View photos ▸</button>' : ''
+}
+
+function wirePhotos(container, photos)
+{
+    if(!photos || !photos.length) return
+    const btn = container.querySelector('.view-photos')
+    if(btn) btn.onclick = () => openLightbox(photos)
+}
+
 function renderProject(p)
 {
     const e = el('article', 'entry')
@@ -45,7 +57,9 @@ function renderProject(p)
         <ul>${(p.facts || []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
         ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
+        ${photosButton(p.photos)}
     `
+    wirePhotos(e, p.photos)
     return e
 }
 
@@ -59,8 +73,57 @@ function renderRole(r)
         ${r.meta ? `<p class="meta">${esc(r.meta)}</p>` : ''}
         ${body}${bullets}
         ${tagsRow(r.tags)}
+        ${photosButton(r.photos)}
     `
+    wirePhotos(e, r.photos)
     return e
+}
+
+// ---------- photo lightbox (slideshow: prev/next, counter, esc/backdrop to close) ----------
+
+let lbPhotos = [], lbIndex = 0
+
+function openLightbox(photos, index = 0)
+{
+    lbPhotos = photos; lbIndex = index
+    renderLightbox()
+    document.addEventListener('keydown', onLightboxKey)
+}
+
+function closeLightbox()
+{
+    $('#lightbox')?.remove()
+    document.removeEventListener('keydown', onLightboxKey)
+}
+
+function stepLightbox(d)
+{
+    lbIndex = (lbIndex + d + lbPhotos.length) % lbPhotos.length
+    renderLightbox()
+}
+
+function onLightboxKey(e)
+{
+    if(e.key === 'Escape') closeLightbox()
+    if(e.key === 'ArrowRight') stepLightbox(1)
+    if(e.key === 'ArrowLeft') stepLightbox(-1)
+}
+
+function renderLightbox()
+{
+    let box = $('#lightbox')
+    if(!box) { box = el('div', 'lightbox'); box.id = 'lightbox'; document.body.appendChild(box) }
+    const multi = lbPhotos.length > 1
+    box.innerHTML = `
+        <button type="button" class="lb-close" aria-label="Close">✕</button>
+        ${multi ? '<button type="button" class="lb-prev" aria-label="Previous photo">‹</button>' : ''}
+        <img src="${esc(lbPhotos[lbIndex])}" alt="">
+        ${multi ? '<button type="button" class="lb-next" aria-label="Next photo">›</button>' : ''}
+        ${multi ? `<span class="lb-count">${lbIndex + 1} / ${lbPhotos.length}</span>` : ''}
+    `
+    box.onclick = (e) => { if(e.target === box) closeLightbox() }
+    $('.lb-close', box).onclick = closeLightbox
+    if(multi) { $('.lb-prev', box).onclick = () => stepLightbox(-1); $('.lb-next', box).onclick = () => stepLightbox(1) }
 }
 
 function section(id, label, contentEl)

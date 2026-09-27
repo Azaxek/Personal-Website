@@ -27,6 +27,10 @@ aside, for real texture that doesn't fit the main copy.
 To show a real photo next to the bio, drop an image at `public/photo.jpg` and set `hero.photo` in
 `src/data.js` to `/photo.jpg`.
 
+Any project, experience, or leadership entry can carry a `photos: ['/photos/whatever.jpg', ...]` array —
+this shows a "View photos" button that opens a full-screen slideshow (prev/next arrows, a counter, Escape
+or click-outside to close). Drop images in `public/photos/` and reference them from there.
+
 ## Sources
 
 LinkedIn (pasted), resumes, three local news articles, and YouTube. Dates follow LinkedIn where it
