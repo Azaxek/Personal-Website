@@ -7,14 +7,46 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 
 // ---------- intro ----------
 
+function spawnBurst(container)
+{
+    const colors = ['var(--live)', 'var(--testing)', 'var(--research)', 'var(--built)', 'var(--accent)']
+    for(let i = 0; i < 40; i++) {
+        const p = el('div', 'burst')
+        const angle = Math.random() * Math.PI * 2
+        const dist = 100 + Math.random() * 280
+        p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`)
+        p.style.setProperty('--dy', `${Math.sin(angle) * dist - 60}px`)
+        p.style.setProperty('--rot', `${Math.random() * 360 - 180}deg`)
+        p.style.setProperty('--c', colors[i % colors.length])
+        p.style.animationDelay = `${.5 + Math.random() * .1}s`
+        container.appendChild(p)
+    }
+}
+
 function runIntro()
 {
     const intro = $('#intro')
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const finish = () => { intro.classList.add('done'); $('#app').classList.add('ready') }
+    const finish = () => {
+        intro.classList.add('fading')
+        $('#app').classList.add('ready')
+        setTimeout(() => intro.classList.add('done'), 600)
+    }
     if(reduced) return finish()
-    const timer = setTimeout(finish, 2900)
+    spawnBurst(intro)
+    const timer = setTimeout(finish, 1500)
     $('#skipIntro').onclick = () => { clearTimeout(timer); finish() }
+}
+
+// ---------- custom cursor ----------
+
+function initCursor()
+{
+    const cur = $('#cursor')
+    if(!cur || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
+    window.addEventListener('mousemove', (e) => { cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)` })
+    document.addEventListener('mouseover', (e) => { if(e.target.closest('a, button, .card, .photo-strip img')) cur.classList.add('hover') })
+    document.addEventListener('mouseout', (e) => { if(e.target.closest('a, button, .card, .photo-strip img')) cur.classList.remove('hover') })
 }
 
 // ---------- small renderers ----------
@@ -314,3 +346,4 @@ build()
 countUp()
 revealOnScroll()
 runIntro()
+initCursor()
