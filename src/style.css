@@ -31,75 +31,65 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- intro ---------- */
+/* ---------- intro: a locked door — click to unlock, turn the key, and walk in ---------- */
 
 #intro {
     position: fixed; inset: 0; z-index: 100;
-    background: var(--bg);
+    background: radial-gradient(circle at 50% 42%, #161d29 0%, var(--bg) 70%);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
 }
 #intro.done { display: none; }
+#intro.fading { opacity: 0; pointer-events: none; transition: opacity .5s ease; }
 
-/* something drops in fast and hits the bottom of the screen (impact at 62% down) */
-#dive {
-    position: absolute; left: 50%; top: -15%; width: 84px; height: 38px;
-    background: linear-gradient(135deg, #262c3a, #0b0d12);
-    border-radius: 40px 40px 26px 26px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, .6), inset 0 2px 8px rgba(255, 255, 255, .07);
-    transform: translate(-50%, 0) rotate(8deg);
-    animation: diveFall .55s cubic-bezier(.6, 0, 1, .4) forwards;
-}
-@keyframes diveFall {
-    0% { top: -15%; transform: translate(-50%, 0) rotate(8deg) scaleY(1); opacity: 1; }
-    90% { top: 59%; transform: translate(-50%, 0) rotate(3deg) scaleY(1); opacity: 1; }
-    100% { top: 62%; transform: translate(-50%, 0) rotate(0deg) scaleY(.25); opacity: 0; }
+#doorBtn {
+    background: none; border: none; padding: 0; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+    font-family: inherit;
 }
 
-/* the streak it leaves behind on the way down */
-#trail {
-    position: absolute; left: 50%; top: -15%; width: 3px; height: 0;
-    background: linear-gradient(180deg, transparent, rgba(120, 180, 255, .55));
-    transform: translateX(-50%);
-    animation: trailGrow .55s cubic-bezier(.6, 0, 1, .4) forwards;
-}
-@keyframes trailGrow { 0% { height: 0; opacity: .85; } 100% { height: 77vh; opacity: 0; } }
+#doorFrame { position: relative; perspective: 1200px; }
 
-/* impact: a shockwave ring, a flash, and flying droplets (spawned in JS as .burst) */
-#shockwave {
-    position: absolute; left: 50%; top: 62%; width: 20px; height: 20px;
-    border: 3px solid var(--accent); border-radius: 50%;
-    transform: translate(-50%, -50%) scale(0); opacity: 0;
-    animation: shock .6s ease-out forwards; animation-delay: .53s;
+#light {
+    position: absolute; left: 8px; top: 8px; right: 8px; bottom: 8px; border-radius: 4px;
+    background: radial-gradient(circle at 50% 45%, #eafcff, var(--accent) 55%, transparent 75%);
+    opacity: 0; transform: scale(.6);
+    transition: opacity .9s ease, transform .9s ease;
 }
-@keyframes shock { 0% { transform: translate(-50%, -50%) scale(0); opacity: .9; } 100% { transform: translate(-50%, -50%) scale(20); opacity: 0; } }
+#light.lit { opacity: .95; transform: scale(1.6); }
 
-#impactFlash {
-    position: absolute; inset: 0; background: #eafcff; opacity: 0;
-    animation: impactFlashAnim .3s ease-out forwards; animation-delay: .5s;
+#door {
+    position: relative; width: 180px; height: 306px;
+    transform-origin: 8px center; transform-style: preserve-3d;
+    transition: transform .85s cubic-bezier(.5, 0, .2, 1);
 }
-@keyframes impactFlashAnim { 0% { opacity: 0; } 30% { opacity: .8; } 100% { opacity: 0; } }
+#door > svg:first-child { position: absolute; inset: 0; }
+#door.opening { transform: rotateY(-108deg); }
 
-.burst {
-    position: absolute; left: 50%; top: 62%; width: 9px; height: 9px;
-    border-radius: 50% 50% 50% 0; background: var(--c, var(--accent));
-    transform: translate(-50%, -50%) rotate(45deg);
-    animation: burstOut .8s cubic-bezier(.15, .7, .3, 1) forwards;
+#keySvg {
+    position: absolute; left: 84px; top: 138px;
+    transform-origin: 9px 12px; transform: rotate(-18deg);
+    animation: keyWiggle 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 4px rgba(232, 201, 106, .5));
 }
-@keyframes burstOut {
-    0% { transform: translate(-50%, -50%) translate(0, 0) rotate(45deg) scale(1); opacity: 1; }
-    100% { transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(.35); opacity: 0; }
-}
+@keyframes keyWiggle { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(-6deg); } }
+#keySvg.turning { animation: none; transition: transform .5s cubic-bezier(.4, 0, .2, 1); transform: rotate(92deg); }
 
-#intro.fading { opacity: 0; pointer-events: none; transition: opacity .55s ease; }
-
-#skipIntro {
-    position: absolute; right: 20px; bottom: 20px; z-index: 2;
-    background: none; border: 1px solid var(--line); color: var(--dim);
-    font-family: var(--mono); font-size: .8rem; padding: .5em 1em;
-    border-radius: 999px; cursor: pointer;
+#doorHint {
+    margin: 0; color: var(--dim); font-size: .95rem; font-family: var(--mono);
+    transition: opacity .3s ease;
 }
-#skipIntro:hover { color: var(--ink); border-color: var(--dim); }
+#doorBtn:hover #doorHint { color: var(--ink); }
+#doorBtn:hover #keySvg { animation-duration: .6s; }
+#doorBtn.clicked { pointer-events: none; }
+#doorBtn.clicked #doorHint { opacity: 0; }
+
+.unlockGlow { animation: unlockGlow .5s ease-out; }
+@keyframes unlockGlow {
+    0% { filter: drop-shadow(0 0 0 transparent); }
+    40% { filter: drop-shadow(0 0 14px var(--accent)); }
+    100% { filter: drop-shadow(0 0 0 transparent); }
+}
 
 /* ---------- custom cursor (desktop with a real mouse only) ---------- */
 
@@ -118,7 +108,7 @@ body {
 @media not all and (hover: hover) and (pointer: fine) { #cursor { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
-    #dive, #trail, #shockwave, #impactFlash, .burst { animation: none; opacity: 0; }
+    #keySvg { animation: none; }
 }
 
 /* ---------- layout ---------- */

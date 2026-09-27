@@ -13,11 +13,31 @@
 </head>
 <body>
     <div id="intro" aria-hidden="true">
-        <div id="dive"></div>
-        <div id="trail"></div>
-        <div id="shockwave"></div>
-        <div id="impactFlash"></div>
-        <button id="skipIntro" type="button">Skip ▸</button>
+        <button id="doorBtn" type="button" aria-label="Unlock and open the door to enter the site">
+            <div id="doorFrame">
+                <div id="light"></div>
+                <div id="door">
+                    <svg viewBox="0 0 200 340" width="180" height="306">
+                        <rect x="8" y="8" width="184" height="324" rx="6" fill="#1b2230" stroke="#3a4358" stroke-width="3" />
+                        <rect x="24" y="24" width="152" height="130" rx="4" fill="none" stroke="#3a4358" stroke-width="2" />
+                        <rect x="24" y="170" width="152" height="146" rx="4" fill="none" stroke="#3a4358" stroke-width="2" />
+                        <circle id="handle" cx="164" cy="176" r="7" fill="#c9ced6" />
+                        <g id="lockPlate">
+                            <rect x="94" y="150" width="34" height="42" rx="6" fill="#2a3244" stroke="#4a5570" stroke-width="2" />
+                            <circle id="keyhole" cx="111" cy="164" r="6" fill="#0b0d12" />
+                            <path d="M107,169 L115,169 L112,180 L110,180 Z" fill="#0b0d12" />
+                        </g>
+                    </svg>
+                    <svg id="keySvg" viewBox="0 0 70 26" width="60" height="22">
+                        <circle cx="10" cy="13" r="8" fill="none" stroke="#e8c96a" stroke-width="4" />
+                        <rect x="17" y="10.5" width="44" height="5" fill="#e8c96a" />
+                        <rect x="52" y="15.5" width="5" height="7" fill="#e8c96a" />
+                        <rect x="60" y="15.5" width="5" height="10" fill="#e8c96a" />
+                    </svg>
+                </div>
+            </div>
+            <p id="doorHint">Click to unlock</p>
+        </button>
     </div>
 
     <div id="cursor" aria-hidden="true"></div>

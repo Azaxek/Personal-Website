@@ -5,23 +5,7 @@ const $ = (sel, root = document) => root.querySelector(sel)
 const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]))
 
-// ---------- intro ----------
-
-function spawnBurst(container)
-{
-    const colors = ['var(--live)', 'var(--testing)', 'var(--research)', 'var(--built)', 'var(--accent)']
-    for(let i = 0; i < 40; i++) {
-        const p = el('div', 'burst')
-        const angle = Math.random() * Math.PI * 2
-        const dist = 100 + Math.random() * 280
-        p.style.setProperty('--dx', `${Math.cos(angle) * dist}px`)
-        p.style.setProperty('--dy', `${Math.sin(angle) * dist - 60}px`)
-        p.style.setProperty('--rot', `${Math.random() * 360 - 180}deg`)
-        p.style.setProperty('--c', colors[i % colors.length])
-        p.style.animationDelay = `${.5 + Math.random() * .1}s`
-        container.appendChild(p)
-    }
-}
+// ---------- intro: click to unlock the door, then it swings open ----------
 
 function runIntro()
 {
@@ -30,12 +14,26 @@ function runIntro()
     const finish = () => {
         intro.classList.add('fading')
         $('#app').classList.add('ready')
-        setTimeout(() => intro.classList.add('done'), 600)
+        setTimeout(() => intro.classList.add('done'), 550)
     }
     if(reduced) return finish()
-    spawnBurst(intro)
-    const timer = setTimeout(finish, 1500)
-    $('#skipIntro').onclick = () => { clearTimeout(timer); finish() }
+
+    const btn = $('#doorBtn')
+    let unlocked = false
+    const unlock = () => {
+        if(unlocked) return
+        unlocked = true
+        btn.classList.add('clicked')
+        $('#keySvg').classList.add('turning')
+        $('#lockPlate').classList.add('unlockGlow')
+        setTimeout(() => {
+            $('#door').classList.add('opening')
+            $('#light').classList.add('lit')
+        }, 480)
+        setTimeout(finish, 480 + 950)
+    }
+    btn.addEventListener('click', unlock)
+    window.addEventListener('wheel', unlock, { once: true, passive: true })
 }
 
 // ---------- custom cursor ----------
