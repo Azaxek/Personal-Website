@@ -3,59 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arjan's Ramen · Portfolio</title>
-    <meta name="description" content="A portfolio served as a ramen shop. Sit down, order a dish, and meet the projects behind it.">
-    <meta name="theme-color" content="#120a1e">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%9C%3C/text%3E%3C/svg%3E">
+    <title>Arjan Khadka</title>
+    <meta name="description" content="Arjan Khadka — student researcher, civic-tech builder, and community organizer in Paris, Texas.">
+    <meta name="theme-color" content="#0b0d12">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b0d12'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%2356ff9f'%3EA%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <canvas class="webgl" aria-label="3D ramen shop: a chef behind a counter of dishes, each dish is a project"></canvas>
-
-    <div id="loading" role="status">
-        <div class="pot"><i></i><i></i><i></i></div>
-        <p>Simmering the broth…</p>
+    <div id="intro" aria-hidden="true">
+        <svg id="streams" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice">
+            <path class="stream s1" d="M 40 20 Q 120 140 195 230" />
+            <path class="stream s2" d="M 360 15 Q 270 130 205 230" />
+            <path class="stream s3" d="M 90 30 Q 160 150 198 230" />
+            <path class="stream s4" d="M 310 30 Q 240 150 202 230" />
+            <path class="stream s5" d="M 200 0 Q 200 120 200 230" />
+        </svg>
+        <div class="drip d1"></div><div class="drip d2"></div><div class="drip d3"></div>
+        <div class="drip d4"></div><div class="drip d5"></div>
+        <div id="water"><span class="wave"></span><span class="wave wave2"></span></div>
+        <button id="skipIntro" type="button">Skip ▸</button>
     </div>
 
-    <header id="hud" hidden>
-        <span class="brand"></span>
-        <div class="tools">
-            <button id="hubBtn" type="button" hidden>⌂ Signpost</button>
-            <button id="menuBtn" type="button" hidden>Menu</button>
-            <button id="soundBtn" type="button" aria-pressed="false">Sound off</button>
-        </div>
-    </header>
+    <div id="app">
+        <header id="top">
+            <span class="brand">Arjan Khadka</span>
+            <nav aria-label="Sections">
+                <a href="#projects">Projects</a>
+                <a href="#experience">Experience</a>
+                <a href="#leadership">Leadership</a>
+                <a href="#honors">Honors</a>
+                <a href="#skills">Skills</a>
+                <a href="#beyond">Beyond</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </header>
 
-    <div id="bubble" hidden role="status" aria-live="polite">
-        <b class="who"></b>
-        <span class="text"></span>
-        <button class="skip" type="button">Skip ▸</button>
-    </div>
+        <main id="content"></main>
 
-    <div id="hint" hidden>
-        <p class="caption" aria-live="polite">Click a sign on the post to explore</p>
-        <div class="chips"></div>
-    </div>
-
-    <aside id="menu" hidden aria-label="Menu"></aside>
-    <aside id="panel" hidden role="dialog" aria-modal="false"></aside>
-    <button id="skipCook" type="button" hidden>Skip the wait ▸</button>
-
-    <div id="game" hidden role="dialog" aria-modal="true" aria-label="Arcade game">
-        <div class="game-bar">
-            <b class="game-title"></b>
-            <span class="game-note">third-party game</span>
-            <a class="game-open" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
-            <button class="game-close" type="button">Close ✕</button>
-        </div>
-        <div class="game-body">
-            <div class="gate">
-                <span class="chip">▮ HEADS UP</span>
-                <h2 class="gate-title"></h2>
-                <p class="gate-by"></p>
-                <p>This game runs on its own website, inside a window here. It has ads, and it puts you in public online lobbies with other people, so treat it like any other website you would open.</p>
-                <button class="btn load" type="button">Load the game</button>
-            </div>
-        </div>
+        <footer id="foot">
+            <p>Built by Arjan Khadka. Source on <a href="https://github.com/Azaxek/ramen-portfolio" target="_blank" rel="noopener">GitHub</a>.</p>
+        </footer>
     </div>
 
     <script type="module" src="/src/main.js"></script>
