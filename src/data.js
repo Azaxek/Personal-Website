@@ -29,7 +29,7 @@ export const education = [
     {
         title: 'Paris High School', meta: 'Paris, TX · Aug 2023 – May 2027',
         bullets: [
-            'Unweighted GPA 4.0/4.0 · weighted GPA 5.389/6.0',
+            'Unweighted GPA 4.0/4.0',
             'AP Language & Composition: 5',
             'AP Literature & Composition: 5',
             'Taking AP Calculus and AP Chemistry',
