@@ -1,50 +1,20 @@
 import './style.css'
-import { owner, hero, projects, experience, leadership, honors, skills, writing, beyond } from './data.js'
+import { lenis } from './smooth.js'
+import { initFx, onSwipe } from './fx.js'
+import { initIMacScene } from './imac-scene.js'
+import { owner, hero, education, projects, experience, leadership, honors, summer, skills, press } from './data.js'
 
 const $ = (sel, root = document) => root.querySelector(sel)
+const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
 const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]))
 
-// ---------- intro: click to unlock the door, then it swings open ----------
+// Escaped text where [label](https://url) becomes a link, the same way the resume writes them.
+const rich = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
 
-function runIntro()
+function prompt(cmd)
 {
-    const intro = $('#intro')
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const finish = () => {
-        intro.classList.add('fading')
-        $('#app').classList.add('ready')
-        setTimeout(() => intro.classList.add('done'), 550)
-    }
-    if(reduced) return finish()
-
-    const btn = $('#doorBtn')
-    let unlocked = false
-    const unlock = () => {
-        if(unlocked) return
-        unlocked = true
-        btn.classList.add('clicked')
-        $('#keySvg').classList.add('turning')
-        $('#lockPlate').classList.add('unlockGlow')
-        setTimeout(() => {
-            $('#door').classList.add('opening')
-            $('#light').classList.add('lit')
-        }, 480)
-        setTimeout(finish, 480 + 950)
-    }
-    btn.addEventListener('click', unlock)
-    window.addEventListener('wheel', unlock, { once: true, passive: true })
-}
-
-// ---------- custom cursor ----------
-
-function initCursor()
-{
-    const cur = $('#cursor')
-    if(!cur || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return
-    window.addEventListener('mousemove', (e) => { cur.style.transform = `translate(${e.clientX}px, ${e.clientY}px)` })
-    document.addEventListener('mouseover', (e) => { if(e.target.closest('a, button, .card, .photo-strip img')) cur.classList.add('hover') })
-    document.addEventListener('mouseout', (e) => { if(e.target.closest('a, button, .card, .photo-strip img')) cur.classList.remove('hover') })
+    return `<p class="prompt"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span> <span class="cmd">${esc(cmd)}</span></p>`
 }
 
 // ---------- small renderers ----------
@@ -70,7 +40,9 @@ function photoStrip(photos)
 function wirePhotoStrip(container, photos)
 {
     if(!photos || !photos.length) return
-    $$('.photo-strip img', container).forEach((img) => { img.onclick = () => openLightbox(photos, +img.dataset.i) })
+    $$('.photo-strip img', container).forEach((img) => {
+        img.onclick = () => { if(!img.closest('.carousel-wrap')?.dataset.moved) openLightbox(photos, +img.dataset.i) } // not the click that ends a drag
+    })
 }
 
 function renderProject(p)
@@ -82,9 +54,9 @@ function renderProject(p)
             <span class="pill ${p.status}">${p.status}</span>
         </div>
         <p class="tagline">${esc(p.tagline)}</p>
-        <p class="body">${esc(p.body)}</p>
-        ${p.note ? `<p class="note">${esc(p.note)}</p>` : ''}
-        <ul>${(p.facts || []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+        <p class="body">${rich(p.body)}</p>
+        ${p.note ? `<p class="note"># ${rich(p.note)}</p>` : ''}
+        <ul>${(p.facts || []).map((f) => `<li>${rich(f)}</li>`).join('')}</ul>
         ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
         ${photoStrip(p.photos)}
@@ -96,11 +68,11 @@ function renderProject(p)
 function renderRole(r)
 {
     const e = el('article', 'entry')
-    const body = r.body ? `<p class="body">${esc(r.body)}</p>` : ''
-    const bullets = r.bullets ? `<ul>${r.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''
+    const body = r.body ? `<p class="body">${rich(r.body)}</p>` : ''
+    const bullets = r.bullets ? `<ul>${r.bullets.map((b) => `<li>${rich(b)}</li>`).join('')}</ul>` : ''
     e.innerHTML = `
         <h3>${esc(r.title)}</h3>
-        ${r.meta ? `<p class="meta">${esc(r.meta)}</p>` : ''}
+        ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         ${body}${bullets}
         ${tagsRow(r.tags)}
         ${photoStrip(r.photos)}
@@ -109,16 +81,16 @@ function renderRole(r)
     return e
 }
 
-// ---------- carousel (Experience, Leadership): a row of cards you page through, like a "where I've worked" strip ----------
+// ---------- carousel (Experience, Leadership) ----------
 
 function renderCard(r)
 {
     const e = el('article', 'card')
-    const body = r.body ? `<p class="body">${esc(r.body)}</p>` : ''
-    const bullets = r.bullets ? `<ul>${r.bullets.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''
+    const body = r.body ? `<p class="body">${rich(r.body)}</p>` : ''
+    const bullets = r.bullets ? `<ul>${r.bullets.map((b) => `<li>${rich(b)}</li>`).join('')}</ul>` : ''
     e.innerHTML = `
         <h3>${esc(r.title)}</h3>
-        ${r.meta ? `<p class="meta">${esc(r.meta)}</p>` : ''}
+        ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         <div class="clamp">${body}${bullets}</div>
         ${tagsRow(r.tags)}
         ${photoStrip(r.photos)}
@@ -129,28 +101,31 @@ function renderCard(r)
         if(clamp.scrollHeight > clamp.clientHeight + 2) {
             const more = el('button', 'see-more', 'see more ▾')
             more.type = 'button'
-            more.onclick = () => { const open = e.classList.toggle('expanded'); more.textContent = open ? 'see less ▴' : 'see more ▾' }
+            more.onclick = () => {
+                if(e.closest('.carousel-wrap')?.dataset.moved) return
+                const open = e.classList.toggle('expanded'); more.textContent = open ? 'see less ▴' : 'see more ▾'
+            }
             clamp.after(more)
         }
     })
     return e
 }
 
+// Draggable + inertia is wired in fx.js; the track is what actually moves inside the clipped .carousel.
 function carousel(items, renderer)
 {
     const wrap = el('div', 'carousel-wrap')
-    const controls = el('div', 'carousel-controls', '<button type="button" class="prev" aria-label="Scroll left">‹</button><button type="button" class="next" aria-label="Scroll right">›</button>')
-    const row = el('div', 'carousel')
-    items.forEach((it) => row.appendChild(renderer(it)))
-    wrap.appendChild(controls)
-    wrap.appendChild(row)
-    const step = () => (row.firstElementChild?.getBoundingClientRect().width || 300) + 16
-    $('.prev', controls).onclick = () => row.scrollBy({ left: -step(), behavior: 'smooth' })
-    $('.next', controls).onclick = () => row.scrollBy({ left: step(), behavior: 'smooth' })
+    wrap.appendChild(el('div', 'carousel-controls', '<span class="hint">drag · swipe</span><button type="button" class="prev" aria-label="Previous">‹</button><button type="button" class="next" aria-label="Next">›</button>'))
+    const view = el('div', 'carousel')
+    view.dataset.cursor = 'drag'
+    const track = el('div', 'track')
+    items.forEach((it) => track.appendChild(renderer(it)))
+    view.appendChild(track)
+    wrap.appendChild(view)
     return wrap
 }
 
-// ---------- photo lightbox (slideshow: prev/next, counter, esc/backdrop to close) ----------
+// ---------- photo lightbox ----------
 
 let lbPhotos = [], lbIndex = 0
 
@@ -158,12 +133,16 @@ function openLightbox(photos, index = 0)
 {
     lbPhotos = photos; lbIndex = index
     renderLightbox()
+    lenis?.stop()
     document.addEventListener('keydown', onLightboxKey)
 }
 
 function closeLightbox()
 {
-    $('#lightbox')?.remove()
+    const box = $('#lightbox')
+    box?._killSwipe?.()
+    box?.remove()
+    lenis?.start()
     document.removeEventListener('keydown', onLightboxKey)
 }
 
@@ -183,7 +162,10 @@ function onLightboxKey(e)
 function renderLightbox()
 {
     let box = $('#lightbox')
-    if(!box) { box = el('div', 'lightbox'); box.id = 'lightbox'; document.body.appendChild(box) }
+    if(!box) {
+        box = el('div', 'lightbox'); box.id = 'lightbox'; document.body.appendChild(box)
+        box._killSwipe = onSwipe(box, { left: () => stepLightbox(1), right: () => stepLightbox(-1) }) // swipe or drag between photos
+    }
     const multi = lbPhotos.length > 1
     box.innerHTML = `
         <button type="button" class="lb-close" aria-label="Close">✕</button>
@@ -197,11 +179,11 @@ function renderLightbox()
     if(multi) { $('.lb-prev', box).onclick = () => stepLightbox(-1); $('.lb-next', box).onclick = () => stepLightbox(1) }
 }
 
-function section(id, label, contentEl)
+function section(id, command, contentEl)
 {
     const s = el('section')
     s.id = id
-    s.appendChild(el('h2', null, esc(label)))
+    s.insertAdjacentHTML('beforeend', prompt(command))
     s.appendChild(contentEl)
     return s
 }
@@ -215,40 +197,46 @@ function list(items, renderer)
 
 // ---------- page assembly ----------
 
-function renderHero()
+function renderBoot()
 {
-    const h = el('div', 'hero')
-    const bioHtml = hero.bio.map((part) => (typeof part === 'string' ? esc(part) : `<b>${esc(part.b)}</b>`)).join('')
-    const photo = hero.photo ? `<img class="photo" src="${esc(hero.photo)}" alt="${esc(owner.name)}">` : ''
-    h.innerHTML = `
-        <div class="hero-top">
-            <div class="hero-text">
-                <p class="kicker">${esc(hero.kicker)}</p>
-                <h1>${bioHtml}</h1>
-                <p class="tagline">${esc(hero.tagline)}</p>
-            </div>
-            ${photo}
-        </div>
-        <p class="epigraph">“${esc(hero.epigraph.text)}”<span>— ${esc(hero.epigraph.by)}</span></p>
+    const b = el('section', 'boot')
+    const bioText = hero.bio.map((part) => (typeof part === 'string' ? part : part.b)).join('')
+    b.innerHTML = `
+        ${prompt('whoami')}
+        <p class="out">${esc(bioText)}</p>
+        <p class="out dim">${esc(hero.kicker)}</p>
+        ${prompt('cat mission.txt')}
+        <p class="out">${esc(hero.tagline)}</p>
+        <p class="out quote">"${esc(hero.epigraph.text)}" <span class="dim">— ${esc(hero.epigraph.by)}</span></p>
+        ${prompt('stats --live')}
         <div class="stats">${hero.stats.map((s) => `<div class="stat"><b data-count="${s.n}">0${esc(s.suf || '')}</b><span>${esc(s.label)}</span></div>`).join('')}</div>
+        ${prompt('open --contact')}
         <div class="links-row">
-            <a href="mailto:${esc(owner.email)}">Email</a>
-            <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="${esc(owner.github)}" target="_blank" rel="noopener">GitHub</a>
+            <a href="mailto:${esc(owner.email)}">email</a>
+            <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">linkedin</a>
+            <a href="${esc(owner.github)}" target="_blank" rel="noopener">github</a>
         </div>
-        <div class="seen-in">
-            <span>As seen in</span>
-            ${writing.press.map((p) => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}</a>`).join('')}
-        </div>
+        ${prompt('cat press.log')}
+        <div class="seen-in">${press.map((p) => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}</a>`).join('')}</div>
+        <p class="prompt cursor"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span></p>
     `
-    return h
+    return b
 }
 
 function renderHonors()
 {
     const wrap = el('div')
+    // Endless marquee: the chips are listed twice and the track slides by exactly half its width.
     const t = el('div', 'ticker')
-    honors.ticker.forEach((label) => t.appendChild(el('span', null, esc(label))))
+    const track = el('div', 'ticker-track')
+    for (let pass = 0; pass < 2; pass++) {
+        honors.ticker.forEach((label) => {
+            const chip = el('span', null, esc(label))
+            if(pass) chip.setAttribute('aria-hidden', 'true')
+            track.appendChild(chip)
+        })
+    }
+    t.appendChild(track)
     wrap.appendChild(t)
     wrap.appendChild(list(honors.groups, renderRole))
     return wrap
@@ -256,7 +244,7 @@ function renderHonors()
 
 function renderSkills()
 {
-    const wrap = el('div', 'entry')
+    const wrap = el('div')
     skills.forEach((g) => {
         const grp = el('div', 'skill-group')
         grp.appendChild(el('h3', null, esc(g.title)))
@@ -266,33 +254,15 @@ function renderSkills()
     return wrap
 }
 
-function renderWriting()
-{
-    const wrap = el('div')
-    writing.posts.forEach((p) => {
-        const e = el('div', 'quote-entry')
-        e.innerHTML = `<blockquote>“${esc(p.quote)}”</blockquote><p class="meta">${esc(p.about)} — <a href="${esc(p.url)}" target="_blank" rel="noopener" style="color:var(--accent)">read it ↗</a></p>`
-        wrap.appendChild(e)
-    })
-    return wrap
-}
-
-function renderBeyond()
-{
-    const e = el('article', 'entry')
-    e.innerHTML = `<p class="body">${esc(beyond.body)}</p>${entryLinks(beyond.links)}`
-    return e
-}
-
 function renderContact()
 {
     const e = el('article', 'entry')
     e.innerHTML = `
         <p class="body">Open to work, and always up for talking about education, safety, and building things for the community.</p>
         <div class="links-row" style="margin-top:16px">
-            <a href="mailto:${esc(owner.email)}">Email</a>
-            <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>
-            <a href="${esc(owner.github)}" target="_blank" rel="noopener">GitHub</a>
+            <a href="mailto:${esc(owner.email)}">email</a>
+            <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">linkedin</a>
+            <a href="${esc(owner.github)}" target="_blank" rel="noopener">github</a>
         </div>
     `
     return e
@@ -301,47 +271,17 @@ function renderContact()
 function build()
 {
     const content = $('#content')
-    content.appendChild(renderHero())
-    content.appendChild(section('projects', 'Projects', list(projects, renderProject)))
-    content.appendChild(section('experience', 'Experience', carousel(experience, renderCard)))
-    content.appendChild(section('leadership', 'Leadership', carousel(leadership, renderCard)))
-    content.appendChild(section('honors', 'Honors', renderHonors()))
-    content.appendChild(section('skills', 'Skills', renderSkills()))
-    content.appendChild(section('writing', 'Writing & press', renderWriting()))
-    content.appendChild(section('beyond', 'Beyond this', renderBeyond()))
-    content.appendChild(section('contact', 'Contact', renderContact()))
-}
-
-function countUp()
-{
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    $$('b[data-count]').forEach((b) => {
-        const to = +b.dataset.count, suf = b.textContent.replace(/[\d,]/g, '')
-        if(reduced) { b.textContent = to.toLocaleString('en-US') + suf; return }
-        const t0 = performance.now()
-        const tick = (now) => {
-            const k = Math.min(1, (now - t0) / 1200), e = 1 - (1 - k) ** 3
-            b.textContent = Math.round(to * e).toLocaleString('en-US') + suf
-            if(k < 1) requestAnimationFrame(tick)
-        }
-        requestAnimationFrame(tick)
-    })
-}
-function $$(sel, root = document) { return [...root.querySelectorAll(sel)] }
-
-function revealOnScroll()
-{
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const entries = $$('.entry, .card')
-    if(reduced || !('IntersectionObserver' in window)) { entries.forEach((e) => e.classList.add('visible')); return }
-    const io = new IntersectionObserver((hits) => {
-        hits.forEach((hit) => { if(hit.isIntersecting) { hit.target.classList.add('visible'); io.unobserve(hit.target) } })
-    }, { threshold: .1, rootMargin: '0px 0px -40px 0px' })
-    entries.forEach((e) => io.observe(e))
+    content.appendChild(renderBoot())
+    content.appendChild(section('education', 'cat education.txt', list(education, renderRole)))
+    content.appendChild(section('projects', 'ls projects/', list(projects, renderProject)))
+    content.appendChild(section('experience', 'cat experience.log', carousel(experience, renderCard)))
+    content.appendChild(section('leadership', 'cat leadership.log', carousel(leadership, renderCard)))
+    content.appendChild(section('honors', 'cat honors.log', renderHonors()))
+    content.appendChild(section('summer', 'cat summer.log', carousel(summer, renderCard)))
+    content.appendChild(section('skills', 'cat skills.txt', renderSkills()))
+    content.appendChild(section('contact', 'mail --compose', renderContact()))
 }
 
 build()
-countUp()
-revealOnScroll()
-runIntro()
-initCursor()
+initFx() // after build(): it wires up the DOM that build() just created
+initIMacScene({ pin: $('#imacPin'), container: $('#imacContainer'), loading: $('#imacLoading') })

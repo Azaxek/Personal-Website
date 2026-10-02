@@ -1,7 +1,7 @@
 # Arjan Khadka — portfolio
 
-A single-page portfolio: a short water/streams intro, then one continuous scroll with everything readable
-without clicking into anything — projects, experience, leadership, honors, skills, writing, and contact.
+A scroll-driven portfolio. An iMac G3 (a real 3D model) turns to face you as you scroll, boots to an Apple
+logo and a terminal, then the camera zooms into the screen and hands off to the readable site below.
 
 ```bash
 npm install
@@ -9,30 +9,28 @@ npm run dev      # http://localhost:5173
 npm run build    # static site in dist/
 ```
 
+Add `?debug=1` to the URL for a timeline slider and `window.__imacDebug` (scene, camera, state).
+
+## Stack
+
+- **Three.js** — the iMac scene (`public/models/imac.glb`), lit as a dark studio.
+- **GSAP** (ScrollTrigger, SplitText, ScrambleText, Draggable, Inertia, Observer) + **Lenis** — one master
+  scrubbed timeline for the hero, smooth scrolling, and the hover/scroll/drag effects.
+- **vanilla-tilt**, **canvas-confetti**, **tsParticles** — card tilt, click bursts, cursor-reactive backdrop.
+- **Vite** — dev server and build. Space Grotesk via Google Fonts.
+
 ## How it's organised
 
-- [`src/data.js`](src/data.js) — all content (name, bio, stats, projects, experience, leadership, honors,
-  skills, writing, press, and the "beyond this" section). Edit this file to change what's on the page.
-- [`src/main.js`](src/main.js) — renders `data.js` into `#content`, runs the intro, animates the stat
-  count-up, and reveals entries as they scroll into view.
-- [`src/style.css`](src/style.css) — the look: dark background, serif headlines, monospace tags/meta,
-  a handwritten accent font for the epigraph and project asides ("notes"), and the intro's water/stream
-  animation.
-- [`index.html`](index.html) — page shell: the intro overlay markup, the sticky nav, and the content mount.
+- [`src/data.js`](src/data.js) — all the content. Edit this file to change what's on the page. Text can
+  contain `[label](https://url)` links.
+- [`src/main.js`](src/main.js) — renders `data.js` into `#content` and starts everything.
+- [`src/imac-scene.js`](src/imac-scene.js) — the 3D hero: model, lighting, the CRT screen texture, camera path.
+- [`src/fx.js`](src/fx.js) — cursor, text effects, reveals, tilt, carousel dragging, click bursts, particles.
+- [`src/smooth.js`](src/smooth.js) — the shared Lenis instance.
+- [`src/style.css`](src/style.css) — all styling.
 
-Each project has a `status` (`live` / `testing` / `research` / `built`) rendered as a colored pill — keep
-these current rather than decorative. A project or role can carry a `note`, shown as a small handwritten
-aside, for real texture that doesn't fit the main copy.
+Each project has a `status` (`live` / `testing` / `research` / `built`) shown as a colored pill. Any
+project or role can carry a `note`, and a `photos: [...]` array (files in `public/photos/`) adds a photo
+strip that opens a swipeable lightbox.
 
-To show a real photo next to the bio, drop an image at `public/photo.jpg` and set `hero.photo` in
-`src/data.js` to `/photo.jpg`.
-
-Any project, experience, or leadership entry can carry a `photos: ['/photos/whatever.jpg', ...]` array —
-this shows a "View photos" button that opens a full-screen slideshow (prev/next arrows, a counter, Escape
-or click-outside to close). Drop images in `public/photos/` and reference them from there.
-
-## Sources
-
-LinkedIn (pasted), resumes, three local news articles, and YouTube. Dates follow LinkedIn where it
-disagrees with the resume (Project Hope, Crime Stoppers Ambassador). Left out on purpose: phone number,
-GPA, LinkedIn's private analytics — email is in Contact.
+`prefers-reduced-motion` is respected: no scroll hijack, a static hero, and the pointer effects are off.

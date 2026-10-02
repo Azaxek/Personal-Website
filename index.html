@@ -5,63 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arjan Khadka</title>
     <meta name="description" content="Arjan Khadka — student researcher, civic-tech builder, and community organizer in Paris, Texas.">
-    <meta name="theme-color" content="#0b0d12">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230b0d12'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%2356ff9f'%3EA%3C/text%3E%3C/svg%3E">
+    <meta name="theme-color" content="#05070a">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2305070a'/%3E%3Ctext x='50' y='68' font-size='58' text-anchor='middle' fill='%235dffb0'%3EA%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="intro" aria-hidden="true">
-        <button id="doorBtn" type="button" aria-label="Unlock and open the door to enter the site">
-            <div id="doorFrame">
-                <div id="light"></div>
-                <div id="door">
-                    <svg viewBox="0 0 200 340" width="180" height="306">
-                        <rect x="8" y="8" width="184" height="324" rx="6" fill="#1b2230" stroke="#3a4358" stroke-width="3" />
-                        <rect x="24" y="24" width="152" height="130" rx="4" fill="none" stroke="#3a4358" stroke-width="2" />
-                        <rect x="24" y="170" width="152" height="146" rx="4" fill="none" stroke="#3a4358" stroke-width="2" />
-                        <circle id="handle" cx="164" cy="176" r="7" fill="#c9ced6" />
-                        <g id="lockPlate">
-                            <rect x="94" y="150" width="34" height="42" rx="6" fill="#2a3244" stroke="#4a5570" stroke-width="2" />
-                            <circle id="keyhole" cx="111" cy="164" r="6" fill="#0b0d12" />
-                            <path d="M107,169 L115,169 L112,180 L110,180 Z" fill="#0b0d12" />
-                        </g>
-                    </svg>
-                    <svg id="keySvg" viewBox="0 0 70 26" width="60" height="22">
-                        <circle cx="10" cy="13" r="8" fill="none" stroke="#e8c96a" stroke-width="4" />
-                        <rect x="17" y="10.5" width="44" height="5" fill="#e8c96a" />
-                        <rect x="52" y="15.5" width="5" height="7" fill="#e8c96a" />
-                        <rect x="60" y="15.5" width="5" height="10" fill="#e8c96a" />
-                    </svg>
-                </div>
-            </div>
-            <p id="doorHint">Click to unlock</p>
-        </button>
+    <header id="top">
+        <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand">arjan@khadka</span>
+        <nav aria-label="Sections">
+            <a href="#projects">projects</a>
+            <a href="#experience">experience</a>
+            <a href="#leadership">leadership</a>
+            <a href="#honors">honors</a>
+            <a href="#summer">summer</a>
+            <a href="#skills">skills</a>
+            <a href="#contact">contact</a>
+        </nav>
+    </header>
+
+    <div id="imacPin" class="imac-pin">
+        <div id="imacContainer" class="imac-container"></div>
+        <p id="imacLoading" class="imac-loading">loading model…</p>
     </div>
 
-    <div id="cursor" aria-hidden="true"></div>
+    <main id="content"></main>
 
-    <div id="app">
-        <header id="top">
-            <span class="brand">Arjan Khadka</span>
-            <nav aria-label="Sections">
-                <a href="#projects">Projects</a>
-                <a href="#experience">Experience</a>
-                <a href="#leadership">Leadership</a>
-                <a href="#honors">Honors</a>
-                <a href="#skills">Skills</a>
-                <a href="#beyond">Beyond</a>
-                <a href="#contact">Contact</a>
-            </nav>
-        </header>
-
-        <main id="content"></main>
-
-        <footer id="foot">
-            <p>Built by Arjan Khadka. Source on <a href="https://github.com/Azaxek/ramen-portfolio" target="_blank" rel="noopener">GitHub</a>.</p>
-        </footer>
-    </div>
+    <footer id="foot">
+        <p>Built by Arjan Khadka. Source on <a href="https://github.com/Azaxek/ramen-portfolio" target="_blank" rel="noopener">GitHub</a>.</p>
+    </footer>
 
     <script type="module" src="/src/main.js"></script>
 </body>
