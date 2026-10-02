@@ -1,4 +1,5 @@
 // All content for the site. Edit this file to change what's on the page — src/main.js just renders it.
+// Anywhere text is shown you can write a link as [label](https://url), same as on the resume.
 export const owner = {
     name: 'Arjan Khadka',
     short: 'Arjan',
@@ -17,20 +18,79 @@ export const hero = {
     tagline: 'My goal is to minimize structural violence, using technology and speech to get there.',
     epigraph: { text: 'Do what you can, with what you have, where you are.', by: 'Theodore Roosevelt' },
     stats: [
-        { n: 1000, suf: '+', label: 'members in Olympiads Democratized' },
+        { n: 4000, suf: '+', label: 'teams worldwide — 1st place at Purple Comet, Mixed Division' },
+        { n: 1200, suf: '+', label: 'members in Olympiads Democratized' },
         { n: 1000, suf: '+', label: 'hygiene products given out in Paris, TX' },
-        { n: 500000, suf: '+', label: 'potential users reached organically at SYNK' },
+        { n: 120000, suf: '+', label: 'users reached organically at SYNK' },
     ],
 }
+
+export const education = [
+    {
+        title: 'Paris High School', meta: 'Paris, TX · Aug 2023 – May 2027',
+        bullets: [
+            'Unweighted GPA 4.0/4.0 · weighted GPA 5.389/6.0',
+            'AP Language & Composition: 5',
+            'AP Literature & Composition: 5',
+            'Taking AP Calculus and AP Chemistry',
+        ],
+    },
+    {
+        title: 'Community service', meta: 'Volunteer hours',
+        bullets: [
+            '[Project New Hope](https://texas-biz.com/co/project-new-hope-inc) (Co-President / Co-Founder): 60+ hrs · grades 10–12',
+            'Tutoring & college advising: 172 hrs · grades 11–12',
+            'Paris Regional Health: 80 hrs across 2021 – 2024 (40 of them in summer 2023)',
+            'National Honor Society: 30 hrs · grades 11–12',
+            'Upward Bound summer volunteering: 40 hrs · grades 10–11',
+        ],
+    },
+]
 
 // status: 'live' | 'testing' | 'research' | 'built'
 export const projects = [
     {
-        name: 'Olympiads Democratized', status: 'live',
-        tagline: 'Free Olympiad prep for students everywhere',
-        body: 'An international initiative providing free Olympiad preparation and tutoring, sourced from olympiad campers and other high achievers, for students who can’t afford prep courses.',
-        facts: ['Founder, August 2025 – present', '1,000+ members'],
-        tags: ['Education', 'Community'],
+        name: 'Game Theory Analysis of Beefing vs. Collaboration', status: 'research',
+        tagline: 'A published preprint on content-creator feuds',
+        body: 'Published a preprint that has 3+ citations. Learned multivariable calculus along the way — and that collaboration is better than beefing for content creators.',
+        facts: ['May 2025 – July 2026'],
+        links: [{ label: 'Read the preprint', url: 'https://arxiv.org/pdf/2506.05373' }],
+    },
+    {
+        name: 'OpenTip', status: 'testing',
+        tagline: 'An open-source, free alternative to the P3 Tipping app',
+        body: 'A completely free-to-set-up-and-use application with all the same features as the P3 Tipping app, which costs over $10,000. Releasing in February 2027.',
+        facts: ['February 2026 – Present', 'Built as part of being a Texas Crime Stoppers Ambassador'],
+        tags: ['Open source', 'Public safety'],
+        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenTip-Tipping-Application' }],
+    },
+    {
+        name: 'Flux', status: 'built',
+        tagline: 'An AI-powered traffic light system — my Diamond Challenge submission',
+        body: 'An AI-powered traffic light system trained to fit inside any camera a locality already has.',
+        facts: ['November 2025 – March 2026', 'Diamond Challenge semifinalist'],
+        tags: ['AI', 'Civic tech'],
+        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/FlowState' }],
+    },
+    {
+        name: 'Vulnerability testing on GitHub', status: 'built',
+        tagline: 'Reported 120+ vulnerabilities across 50 GitHub repositories',
+        body: 'Used SAST (Static Application Security Testing) to find vulnerabilities across popular, weekly-trending GitHub repositories and reported them to the maintainers.',
+        facts: ['October 2025 – August 2026'],
+        tags: ['Security', 'SAST'],
+    },
+    {
+        name: 'FocusGuard', status: 'built',
+        tagline: 'A deterministic application to keep you from getting distracted',
+        body: '20+ users, distributed as a .exe file through personal Gmail accounts.',
+        facts: ['June 2026 – July 2026'],
+    },
+    {
+        name: 'AP Chemistry Question Database', status: 'live',
+        tagline: 'Practice questions for AP Chemistry — I maintain it',
+        body: 'Documented every AP packet the AP Chem instructor handed out and put them into a database for practice. Used a script to scrape the internet for more AP-style questions, and added 800+ questions across all of AP Chemistry.',
+        facts: ['August 2026 – Present'],
+        tags: ['Education', 'Scraping'],
     },
     {
         name: 'NextStep', status: 'live',
@@ -41,30 +101,6 @@ export const projects = [
         links: [{ label: 'Open NextStep', url: 'https://thenextstep.vercel.app/' }],
     },
     {
-        name: 'GBM Turing-Pattern Model', status: 'research',
-        tagline: 'A reaction–diffusion model of multifocal glioblastoma',
-        body: 'A Turing-type reaction–diffusion simulation of VEGF-A / sFLT-1 activator–inhibitor dynamics, built to predict the spatial distribution of multifocal glioblastoma lesions.',
-        note: 'In simulation, satellite lesions land about 2.8cm apart — which the project notes as consistent with clinical observations.',
-        facts: ['Python: NumPy, SciPy, Matplotlib', 'Generates the manuscript and graphical-abstract figures'],
-        tags: ['Computational biology', 'PDEs', 'Python'],
-    },
-    {
-        name: 'LightEEG-Net', status: 'research',
-        tagline: 'Lightweight, explainable Alzheimer’s detection from 6-channel EEG',
-        body: 'A compact deep-learning framework for detecting Alzheimer’s disease from reduced-channel, resting-state EEG — under roughly 2.5 thousand parameters. Temporal convolutions approximate frequency banks, depthwise spatial convolutions mix channels, and squeeze-and-excitation attention filters out sensor noise.',
-        facts: ['PyTorch implementation released for reproducibility', 'Written up as a manuscript'],
-        tags: ['Deep learning', 'EEG', 'Explainable AI'],
-        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/LightEEG-Net' }],
-    },
-    {
-        name: 'Benford Analysis of Campaign Finance', status: 'research',
-        tagline: 'Do campaign donations follow Benford’s law?',
-        body: 'An independent study applying Benford’s-law digit analysis — a forensic-accounting technique — to U.S. FEC donation records, across three tests: leading-digit distribution, duplicate amounts, and clustering just under itemization thresholds.',
-        note: 'No lab, advisor, or grant — built to be understood and defended, not just run.',
-        facts: ['Self-directed statistical analysis'],
-        tags: ['Statistics', 'Political finance'],
-    },
-    {
         name: 'OpenCouncil', status: 'built',
         tagline: 'Paris, Texas city council meetings, in plain English',
         body: 'Fetches Paris, Texas city council agendas and minutes, summarizes them with an LLM, and shows them in a web app so residents can follow what their city is doing and when to speak up.',
@@ -72,133 +108,197 @@ export const projects = [
         tags: ['Civic tech', 'LLM summarization'],
         links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenCouncil' }],
     },
-    {
-        name: 'OpenTip', status: 'testing',
-        tagline: 'An open-source anonymous tip platform for cities that can’t afford P3',
-        body: 'As a Texas Crime Stopper Ambassador, building an open-source alternative to the P3 tip app for cities priced out of its $10,000+ commercial license. A browser-based platform for anonymous crime reporting, aimed at law-enforcement agencies and Crime Stoppers programs.',
-        note: 'In testing now — announcement planned at the conference in Waco this year.',
-        facts: ['Next.js 14 + Supabase + Tailwind CSS', 'Part of the Texas Association for Crime Stoppers ambassador role'],
-        tags: ['Next.js', 'Supabase', 'Public safety'],
-    },
 ]
 
 export const experience = [
     {
-        title: 'Vertical Application Developer', meta: 'Mantis AI · MIT CSAIL · Apr 2026 – Present',
-        body: 'Building vertical AI applications at Mantis AI, a startup operating within MIT’s Computer Science and Artificial Intelligence Laboratory. Developing production-ready AI-powered tools and pipelines.',
-        tags: ['AI applications', 'Pipelines'],
-    },
-    {
-        title: 'Crime Stopper Ambassador', meta: 'Texas Association for Crime Stoppers · Feb 2026 – Present · one of 12 in the state',
+        title: 'Crime Stoppers Ambassador', meta: '[Texas Association for Crime Stoppers](https://myparistexas.com/paris-isd-students-earn-top-honors-at-texas-crime-stoppers-conference/) · Feb 2026 – Present · grades 11–12',
         bullets: [
-            'Prototyping and testing an open-source version of the P3 app for cities that can’t afford the $10,000+ price tag (see OpenTip).',
-            'Working to expand Crime Stoppers to more campuses and producing a series of safety videos to promote stopping crime.',
-            'Worked with law enforcement across the state to protect people.',
-            'Raised awareness through initiatives like the “See something, say something” poster competition.',
-            'Led the organization’s TikTok awareness push.',
+            'Ambassador for the state of Texas — 1 of 12.',
+            'Developed a free, open-source alternative to the P3 Tipping app to make that kind of technology more accessible (see OpenTip).',
+            'Reached 1,000+ kids across Paris, Texas with the Crime Stoppers “Stop Crime” video series.',
         ],
-        tags: ['Communication', 'Community outreach'],
+        tags: ['Public safety', 'Community outreach'],
     },
     {
-        title: 'Marketing Lead Intern', meta: 'SYNK · Mar – Jul 2026 · remote',
-        bullets: ['Reached 500,000+ potential users organically on platforms such as Reddit.'],
+        title: 'Marketing Intern (unpaid)', meta: 'Synk.today · Mar – Jul 2026 · remote',
+        bullets: ['Reached 120,000+ users organically on platforms such as Reddit.'],
     },
     {
-        title: 'Website Director', meta: 'R.I.S.E. Tennis · Feb 2026 – Present',
-        bullets: ['Built and maintains the organization’s website.', 'Helped raise $15,000+ in donated tennis equipment.'],
+        title: 'Website Operations', meta: 'RISE Tennis · Feb – May 2026',
+        bullets: [
+            'Built and ran the organization’s website.',
+            'Developed a plan to accept donations digitally and to request old tennis equipment be donated.',
+        ],
     },
     {
-        title: 'Tutor and college advisor', meta: '2023 – Present',
-        bullets: ['100+ hours of one-on-one and small-group math tutoring.', '50+ hours guiding peers through applications, scholarships and test prep.'],
+        title: 'Tutor & college advisor', meta: 'Grades 11–12 · 172 hours',
+        body: 'One-on-one and small-group math tutoring, and guiding peers through applications, scholarships and test prep.',
     },
 ]
 
 export const leadership = [
     {
-        title: 'Project Hope.Serve', meta: 'Co-Founder & President · Jan 2025 – Present · Paris, TX',
-        body: 'Works with local entities to serve people in Paris, Texas who need hygiene products.',
-        bullets: ['Ran a hygiene drive that gave 1,000+ essential products to homeless and low-income neighbors.'],
+        title: 'Olympiads Democratized', meta: 'President / Founder · grades 10–12',
+        bullets: [
+            'Founded an Olympiad equity org after failing the USAPhO qualifier, and set up a completely anonymous Discord server.',
+            'Recruited 10+ mentors (USAMO / USAPhO / USACO) and grew the server to 1,200+ members.',
+            'Active members self-reported 20 USAMO and 12 USAPhO qualifiers in the last olympiad season.',
+        ],
+        tags: ['Education', 'Community'],
     },
     {
-        title: 'Olympiads Democratized', meta: 'Founder · Aug 2025 – Present',
-        body: 'A free Olympiad prep community with resources and tutoring sourced from olympiad campers and high achievers, for students worldwide.',
-        bullets: ['1,000+ members.'],
+        title: 'Project New Hope', meta: 'Co-President / Co-Founder · grades 10–12 · Paris, TX',
+        body: 'Works with local entities to serve people in Paris, Texas who need hygiene products. [More on Project New Hope](https://texas-biz.com/co/project-new-hope-inc).',
+        bullets: ['Ran a hygiene drive that gave 1,000+ essential products to homeless and low-income neighbors.', '60+ volunteer hours.'],
     },
-    { title: 'NAEIF', meta: 'Steering member', body: 'North American Educational Initiatives Foundation.' },
-    { title: 'Bayar Fellowship', meta: 'Completed · 2026', body: 'Professional-growth fellowship organized by Esat Bayar.' },
+    {
+        title: 'VEX Robotics', meta: 'Team Lead (9–12) · Vice President (11–12) · Member (9–10)',
+        bullets: [
+            'Led the team to state 2x.',
+            'Organized meetings and helped our sister team qualify for regionals.',
+            'Mentored 10+ underclassmen in proper building, notebooking, and programming fundamentals.',
+            '[Won the Judges’ Award.](https://azaxek.github.io/proof.github.io/robotics.html)',
+        ],
+    },
+    {
+        title: 'UIL Speech & Debate', meta: 'Member (9–10) · President (11–12)',
+        bullets: [
+            'One-on-one coached 10+ debaters by debating them and giving individualized feedback.',
+            'Ran weekly meetings.',
+            '[Helped 4+ members advance to regionals.](https://azaxek.github.io/proof.github.io/debate.html)',
+        ],
+    },
+    {
+        title: 'Future Problem Solving', meta: 'Team Captain · grades 9–12',
+        bullets: [
+            'Led the team to 4 state qualifications and [1 international qualification](https://www.txfpsp.org/competitionresults/2024resultsstate/).',
+            'Mentored new members on the challenge and solution-writing formats that score the most points.',
+            '[Also competed in Scenario Writing and earned 1 international qualification.](https://azaxek.github.io/proof.github.io/fps-scenario-writing.html)',
+        ],
+    },
+    {
+        title: 'Band', meta: 'Member (9–10) · Section Leader (10–11) · bass clarinet',
+        bullets: [
+            'Mentored 5+ underclassmen.',
+            'Helped the band qualify for marching regionals 3x and for marching state 1x.',
+            'Led 2+ low reed and brass sectionals.',
+        ],
+    },
+    {
+        title: 'NAEIF', meta: 'Steering Committee Member · grades 11–12',
+        bullets: [
+            '[North American Educational Initiatives Foundation](https://naeif.org/student-steering-committee/) student steering committee.',
+            'Presented a lecture on democracy and its pros and cons.',
+            'Led committee voting 2x and helped organize meetings and virtual conferences 3x.',
+        ],
+    },
+    {
+        title: 'Spanish Honor Society', meta: 'Vice President · grades 10–11',
+        bullets: [
+            'Helped organize 4+ meetings and organized voting for the next officers.',
+            '[Inducted 30+ students into Spanish Honor Society.](https://azaxek.github.io/proof.github.io/spanish-honor-society.html)',
+        ],
+    },
+    {
+        title: 'CatGut', meta: 'Vice Captain · grade 12',
+        bullets: [
+            'Helped organize 5+ meetings.',
+            'Passed information along to 3 members who didn’t have access to Snapchat.',
+            '[Taught 4 new members the duties of being in the org.](https://azaxek.github.io/proof.github.io/catgut.html)',
+        ],
+    },
     {
         title: 'At school', meta: 'Paris High School',
         bullets: [
-            'Student Council Vice President (2023 – Present).',
             'Crime Stoppers chapter Treasurer (2024 – Present).',
-            'Spanish Honor Society Vice President (2024 – Present).',
-            'Band section leader, bass clarinet (2024 – Present); Key Club (2023 – Present).',
-            'PRMC Hospital volunteer, 80 hours (2021 – 2024).',
+            'Key Club (2023 – Present).',
         ],
     },
+    { title: 'Bayar Fellowship', meta: 'Completed · 2026', body: 'Professional-growth fellowship organized by Esat Bayar.' },
 ]
 
 export const honors = {
     ticker: [
-        'National Merit Commended Student', 'Carson Scholar', 'USA Physics Olympiad Qualifier', 'USA National Chemistry Olympiad Qualifier',
-        'Future Problem Solving: 3rd Place Texas State', 'UIL Lincoln–Douglas Debate: 1st Place District', 'VEX Robotics: UIL State Qualifier',
+        'Purple Comet: 1st place, Mixed Division', 'USA Physics Olympiad qualifier', 'US National Chemistry Olympiad qualifier',
+        'Genes In Space: Honorable Mention', 'Future Problem Solving: 3rd place state', 'Diamond Challenge semifinalist',
+        'UIL Debate: district winner 2x', 'VEX Robotics: state qualifier 2x', 'National Merit Commended', 'Carson Scholar',
     ],
     groups: [
         {
-            title: 'Science and competition',
+            title: 'Competitions',
             bullets: [
-                'USA Physics Olympiad (USAPhO) national exam qualifier, 2026: among the top ~400 students nationally.',
-                'USA National Chemistry Olympiad (USNCO) national exam qualifier, 2026.',
-                'Future Problem Solving: 3rd place at Texas State (senior division); led the team to international qualification.',
-                'UIL Lincoln–Douglas Debate: 1st place at district in 2024–25 and 2025–26, with top speaker points both years.',
-                'VEX Robotics: qualified for UIL State; coached new team members.',
+                '[Purple Comet Competition](https://purplecomet.org/results/2026): 1st place, Mixed Division — out of 4,000+ teams worldwide (team Radix Sort, Paris High). Grade 11.',
+                '[USA Physics Olympiad qualifier](https://aapt.org/physicsteam/2026/upload/2026-USAPhO-Qualifiers-v3.pdf): ranked among the top 440 of 7,000 exam takers nationally. Grade 11.',
+                '[US National Chemistry Olympiad](https://azaxek.github.io/proof.github.io/files/usnco-qualification-email.png): national exam qualifier — top 1,000 of 10,000+ nationwide. Grade 11.',
+                '[Genes In Space](https://www.genesinspace.org/news/blog/2026-Honorable-Mentions/): Honorable Mention — top 15 of 900+ teams nationwide. Grade 11.',
+                'Future Problem Solving: 3rd place at state in [Team Problem Solving](https://www.txfpsp.org/competitionresults/2024resultsstate/) and [Scenario Writing](https://myparistexas.com/paris-isd-students-earn-46-awards-at-state-future-problem-solving-competition/); international qualifier. Grades 9 and 11.',
+                '[Diamond Challenge](https://azaxek.github.io/proof.github.io/files/diamond-challenge-pitch-round.png) semifinalist. Grade 11.',
+                'UIL Debate district winner 2x: [2025](https://theparisnews.com/news/paris-high-school-students-excel-at-district-academic-meet/article_5870aeb3-4523-4bc4-b4b9-1a470caa4c7b.html) and 2026. Grades 10 and 11.',
+                'VEX Robotics state qualifier 2x: 2024 and 2025. Grades 9 and 10.',
             ],
         },
         {
-            title: 'Academic recognition',
+            title: 'Recognition',
             bullets: [
-                'National Merit Commended Student (2027 National Merit Scholarship Program).',
-                'Carson Scholar (2026): $1,000 for academic achievement and community service.',
-                'College Board National Recognition Program honoree, recognized by the Paris ISD Board of Trustees.',
+                '[National Merit Commended](https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html) student. Grade 11.',
+                '[Carson Scholar](https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/). Grade 11.',
+            ],
+        },
+        {
+            title: 'Merit awards — each given to one student in the class',
+            bullets: [
+                'Honors Geometry (grade 9)',
+                'Honors Biology (grade 9)',
+                '[Honors Chemistry](https://azaxek.github.io/proof.github.io/honors-chemistry-project.html) (grade 10)',
+                'Honors World History (grade 10)',
+                'Dual Credit Spanish III (grade 10)',
+                'AP Language & Composition (grade 11)',
             ],
         },
     ],
 }
 
-export const skills = [
-    { title: 'Languages and tools', tags: ['TypeScript', 'Python', 'Node.js', 'APIs', 'JSON', 'GitHub', 'Cursor', 'Copilot'] },
-    { title: 'Frameworks and libraries', tags: ['React', 'REST APIs', 'LangChain', 'Django', 'Flask', 'pandas', 'NumPy', 'scikit-learn', 'HuggingFace'] },
-    { title: 'Concepts', tags: ['AI / ML', 'Full-stack development', 'Embeddings', 'Data scraping', 'Algorithms', 'Linear algebra', 'Async programming'] },
-    { title: 'Infrastructure and data', tags: ['AWS', 'Airflow', 'FAISS', 'Neo4j', 'NetworkX', 'Selenium'] },
+export const summer = [
+    {
+        title: 'Boys State', meta: 'Jun – Jul 2026',
+        bullets: [
+            '[Chosen as one of three delegates from Lamar County.](https://azaxek.github.io/proof.github.io/texas-boys-state.html)',
+            'Voted up all the way to state delegate for the Nationalist Party (1% of the Boys State population).',
+        ],
+    },
+    {
+        title: 'Upward Bound: Summer 2', meta: 'Jun – Jul 2026',
+        bullets: [
+            'Took Calculus 1 and Art History, and volunteered 20 hrs.',
+            'Made clay sculptures again.',
+            'Accepted to go on the summer trip for the second year in a row — 1 of 20 selected.',
+        ],
+    },
+    {
+        title: 'Upward Bound: Summer 1', meta: 'Jun – Jul 2025',
+        bullets: [
+            'Took College Frameworks and volunteered 20 hrs.',
+            '[Made clay sculptures.](https://azaxek.github.io/proof.github.io/upward-bound-sculpting.html)',
+            '[Accepted to go on the summer trip — 1 of 20 selected.](https://azaxek.github.io/proof.github.io/upward-bound.html)',
+        ],
+    },
+    {
+        title: 'Paris Regional Health', meta: 'Volunteer · May – Aug 2023 · 40 hrs that summer, 80 hrs total (2021 – 2024)',
+        bullets: ['Wiped 100+ chairs.', 'Checked in 120+ patients.'],
+    },
 ]
 
-export const writing = {
-    posts: [
-        {
-            quote: 'the smartest kids are already tunneling underneath them.', about: 'On why students reach for AI in class',
-            url: 'https://www.linkedin.com/feed/update/urn:li:activity:7442555951976620032/',
-        },
-        {
-            quote: 'the ultimate flex isn’t launching a product in an hour; it’s building a system that doesn’t collapse in a week.', about: 'The death of the software engineer?',
-            url: 'https://www.linkedin.com/feed/update/urn:li:activity:7441831302770819072/',
-        },
-        {
-            quote: 'the ultimate flex isn’t destroying an opponent; it’s converting them.', about: 'On unlearning a combat style of debate',
-            url: 'https://www.linkedin.com/feed/update/urn:li:activity:7440377817097465856/',
-        },
-    ],
-    press: [
-        { label: 'The Paris News — National Merit', url: 'https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html' },
-        { label: 'East Texas Radio — National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
-        { label: 'East Texas Radio — Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
-        { label: 'MyParisTexas — Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
-    ],
-}
+export const skills = [
+    {
+        title: 'Additional skills',
+        tags: ['Playing guitar · 2018 – present', 'Speaking Spanish · 2021 – present', 'Speaking Nepali · 2009 – present', 'Playing bass clarinet · 2023 – present', 'Swimming · 2016 – present'],
+    },
+]
 
-export const beyond = {
-    body: 'Section leader for bass clarinet in the Paris High Blue Blazes marching band, mentoring five-plus members — the 2023–24 show went to the UIL 4A State Marching Contest. Also VEX Robotics (qualified for UIL State, coach newer members) and Lincoln–Douglas debate (1st at district two years running, now aiming to convert people rather than beat them).',
-    links: [
-        { label: '2023–24 show — UIL State prelims', url: 'https://www.youtube.com/watch?v=AVtVxIepRqY' },
-        { label: 'Paris High School Band', url: 'https://phs.parisisd.net/band' },
-    ],
-}
+export const press = [
+    { label: 'The Paris News — National Merit', url: 'https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html' },
+    { label: 'East Texas Radio — National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
+    { label: 'East Texas Radio — Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+    { label: 'MyParisTexas — Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+]
