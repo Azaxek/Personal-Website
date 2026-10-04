@@ -18,7 +18,7 @@ Add `?debug=1` to the URL for a timeline slider and `window.__imacDebug` (scene,
 - **Three.js** — the iMac scene (`public/models/imac.glb`), lit as a dark studio.
 - **GSAP** (ScrollTrigger, SplitText, ScrambleText, Draggable, Inertia, Observer) + **Lenis** — one master
   scrubbed timeline for the hero, smooth scrolling, and the hover/scroll/drag effects.
-- **vanilla-tilt**, **canvas-confetti**, **tsParticles** — card tilt, click bursts, cursor-reactive backdrop.
+- **vanilla-tilt**, **tsParticles** — card tilt and the cursor-reactive backdrop.
 - **Vite** — dev server and build. Space Grotesk via Google Fonts.
 
 ## How it's organised

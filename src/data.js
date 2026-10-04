@@ -30,8 +30,8 @@ export const education = [
         title: 'Paris High School', meta: 'Paris, TX · Aug 2023 – May 2027',
         bullets: [
             'Unweighted GPA 4.0/4.0',
-            'AP Language & Composition: 5',
-            'AP Literature & Composition: 5',
+            '[AP Language & Composition](photo:ap-lang): 5',
+            '[AP Literature & Composition](photo:ap-lit): 5',
             'Taking AP Calculus and AP Chemistry',
         ],
     },
@@ -141,7 +141,7 @@ export const leadership = [
     {
         title: 'Olympiads Democratized', meta: 'President / Founder · grades 10–12',
         bullets: [
-            'Founded an Olympiad equity org after failing the USAPhO qualifier, and set up a completely anonymous Discord server.',
+            'Founded an Olympiad equity org after failing the USAPhO qualifier, and set up a [completely anonymous Discord server](photo:olympiads).',
             'Recruited 10+ mentors (USAMO / USAPhO / USACO) and grew the server to 1,200+ members.',
             'Active members self-reported 20 USAMO and 12 USAPhO qualifiers in the last olympiad season.',
         ],
@@ -158,7 +158,7 @@ export const leadership = [
             'Led the team to state 2x.',
             'Organized meetings and helped our sister team qualify for regionals.',
             'Mentored 10+ underclassmen in proper building, notebooking, and programming fundamentals.',
-            '[Won the Judges’ Award.](https://azaxek.github.io/proof.github.io/robotics.html)',
+            '[Won the Judges’ Award.](photo:robotics)',
         ],
     },
     {
@@ -166,7 +166,7 @@ export const leadership = [
         bullets: [
             'One-on-one coached 10+ debaters by debating them and giving individualized feedback.',
             'Ran weekly meetings.',
-            '[Helped 4+ members advance to regionals.](https://azaxek.github.io/proof.github.io/debate.html)',
+            '[Helped 4+ members advance to regionals.](photo:debate)',
         ],
     },
     {
@@ -174,7 +174,7 @@ export const leadership = [
         bullets: [
             'Led the team to 4 state qualifications and [1 international qualification](https://www.txfpsp.org/competitionresults/2024resultsstate/).',
             'Mentored new members on the challenge and solution-writing formats that score the most points.',
-            '[Also competed in Scenario Writing and earned 1 international qualification.](https://azaxek.github.io/proof.github.io/fps-scenario-writing.html)',
+            '[Also competed in Scenario Writing and earned 1 international qualification.](photo:fps)',
         ],
     },
     {
@@ -197,7 +197,7 @@ export const leadership = [
         title: 'Spanish Honor Society', meta: 'Vice President · grades 10–11',
         bullets: [
             'Helped organize 4+ meetings and organized voting for the next officers.',
-            '[Inducted 30+ students into Spanish Honor Society.](https://azaxek.github.io/proof.github.io/spanish-honor-society.html)',
+            '[Inducted 30+ students into Spanish Honor Society.](photo:spanish-honor-society)',
         ],
     },
     {
@@ -205,7 +205,7 @@ export const leadership = [
         bullets: [
             'Helped organize 5+ meetings.',
             'Passed information along to 3 members who didn’t have access to Snapchat.',
-            '[Taught 4 new members the duties of being in the org.](https://azaxek.github.io/proof.github.io/catgut.html)',
+            '[Taught 4 new members the duties of being in the org.](photo:catgut)',
         ],
     },
     {
@@ -230,10 +230,10 @@ export const honors = {
             bullets: [
                 '[Purple Comet Competition](https://purplecomet.org/results/2026): 1st place, Mixed Division — out of 4,000+ teams worldwide (team Radix Sort, Paris High). Grade 11.',
                 '[USA Physics Olympiad qualifier](https://aapt.org/physicsteam/2026/upload/2026-USAPhO-Qualifiers-v3.pdf): ranked among the top 440 of 7,000 exam takers nationally. Grade 11.',
-                '[US National Chemistry Olympiad](https://azaxek.github.io/proof.github.io/files/usnco-qualification-email.png): national exam qualifier — top 1,000 of 10,000+ nationwide. Grade 11.',
+                '[US National Chemistry Olympiad](photo:usnco): national exam qualifier — top 1,000 of 10,000+ nationwide. Grade 11.',
                 '[Genes In Space](https://www.genesinspace.org/news/blog/2026-Honorable-Mentions/): Honorable Mention — top 15 of 900+ teams nationwide. Grade 11.',
                 'Future Problem Solving: 3rd place at state in [Team Problem Solving](https://www.txfpsp.org/competitionresults/2024resultsstate/) and [Scenario Writing](https://myparistexas.com/paris-isd-students-earn-46-awards-at-state-future-problem-solving-competition/); international qualifier. Grades 9 and 11.',
-                '[Diamond Challenge](https://azaxek.github.io/proof.github.io/files/diamond-challenge-pitch-round.png) semifinalist. Grade 11.',
+                '[Diamond Challenge](photo:diamond) semifinalist. Grade 11.',
                 'UIL Debate district winner 2x: [2025](https://theparisnews.com/news/paris-high-school-students-excel-at-district-academic-meet/article_5870aeb3-4523-4bc4-b4b9-1a470caa4c7b.html) and 2026. Grades 10 and 11.',
                 'VEX Robotics state qualifier 2x: 2024 and 2025. Grades 9 and 10.',
             ],
@@ -248,12 +248,12 @@ export const honors = {
         {
             title: 'Merit awards — each given to one student in the class',
             bullets: [
-                'Honors Geometry (grade 9)',
-                'Honors Biology (grade 9)',
-                '[Honors Chemistry](https://azaxek.github.io/proof.github.io/honors-chemistry-project.html) (grade 10)',
-                'Honors World History (grade 10)',
+                '[Honors Geometry](photo:merit-geometry) (grade 9)',
+                '[Honors Biology](photo:merit-biology) (grade 9)',
+                '[Honors Chemistry](photo:merit-chemistry) (grade 10) — plus the [Mole Day project](photo:mole-day)',
+                '[Honors World History](photo:merit-world-history) (grade 10)',
                 'Dual Credit Spanish III (grade 10)',
-                'AP Language & Composition (grade 11)',
+                '[AP Language & Composition](photo:merit-ap-lang) (grade 11)',
             ],
         },
     ],
@@ -263,7 +263,7 @@ export const summer = [
     {
         title: 'Boys State', meta: 'Jun – Jul 2026',
         bullets: [
-            '[Chosen as one of three delegates from Lamar County.](https://azaxek.github.io/proof.github.io/texas-boys-state.html)',
+            '[Chosen as one of three delegates from Lamar County.](photo:boys-state)',
             'Voted up all the way to state delegate for the Nationalist Party (1% of the Boys State population).',
         ],
     },
@@ -279,8 +279,8 @@ export const summer = [
         title: 'Upward Bound: Summer 1', meta: 'Jun – Jul 2025',
         bullets: [
             'Took College Frameworks and volunteered 20 hrs.',
-            '[Made clay sculptures.](https://azaxek.github.io/proof.github.io/upward-bound-sculpting.html)',
-            '[Accepted to go on the summer trip — 1 of 20 selected.](https://azaxek.github.io/proof.github.io/upward-bound.html)',
+            '[Made clay sculptures.](photo:sculpting)',
+            '[Accepted to go on the summer trip — 1 of 20 selected.](photo:upward-bound)',
         ],
     },
     {
@@ -301,4 +301,35 @@ export const press = [
     { label: 'East Texas Radio — National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
     { label: 'East Texas Radio — Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
     { label: 'MyParisTexas — Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+]
+
+// Every photo on the site. Files live in public/photos/. Any text can link to one with [label](photo:id) —
+// hovering the word pops up the picture, clicking it opens it larger, and it never leaves the page.
+// To swap a picture, overwrite its file in public/photos/ (same name) and edit the caption here.
+export const photos = {
+    'robotics': { src: '/photos/robotics.jpg', w: 1400, h: 689, title: 'VEX Robotics', caption: 'Judges Award, VEX V5 Competition — Team 1394B.' },
+    'debate': { src: '/photos/debate.jpg', w: 647, h: 1400, title: 'Debate', caption: 'With the team after a tournament round.' },
+    'boys-state': { src: '/photos/boys-state.jpg', w: 960, h: 1280, title: 'Texas Boys State', caption: 'With fellow delegates at Texas Boys State.' },
+    'upward-bound': { src: '/photos/upward-bound.jpg', w: 1400, h: 1050, title: 'Upward Bound', caption: 'On the Upward Bound trip.' },
+    'sculpting': { src: '/photos/sculpting.jpg', w: 1400, h: 1050, title: 'Upward Bound sculpting', caption: 'Ceramic pieces made during Upward Bound.' },
+    'spanish-honor-society': { src: '/photos/spanish-honor-society.jpg', w: 1400, h: 1050, title: 'Spanish Honor Society', caption: 'Membership certificate, Sociedad Honoraria Hispánica de Paris High School.' },
+    'fps': { src: '/photos/fps.jpg', w: 1050, h: 1400, title: 'Future Problem Solving', caption: '3rd Place, Creative Writing, Texas Future Problem Solving State Bowl.' },
+    'catgut': { src: '/photos/catgut.jpg', w: 780, h: 1400, title: 'CatGut', caption: 'Running the flag onto the field at a football game.' },
+    'mole-day': { src: '/photos/mole-day.jpg', w: 1050, h: 1400, title: 'Honors Chemistry', caption: 'Mole Day project — a brownie cake decorated with Avogadro’s number.' },
+    'usnco': { src: '/photos/usnco.png', w: 1400, h: 587, title: 'US National Chemistry Olympiad', caption: 'Qualification email from the Dallas/Fort Worth ACS Section Coordinator: a 57/60 on the Local Section Exam, advancing to the National Exam.' },
+    'diamond': { src: '/photos/diamond.png', w: 1400, h: 561, title: 'Diamond Challenge', caption: 'Notification email confirming advancement to the 2026 Pitching Round.' },
+    'ap-lang': { src: '/photos/ap-lang.png', w: 790, h: 340, title: 'AP English Language & Composition', caption: 'Official score report: 5.' },
+    'ap-lit': { src: '/photos/ap-lit.png', w: 789, h: 332, title: 'AP English Literature & Composition', caption: 'Official score report: 5.' },
+    'olympiads': { src: '/photos/olympiads.png', w: 301, h: 241, title: 'Olympiads Democratized', caption: 'Discord community server, established March 2026 — 1,135 members at the time of this screenshot.' },
+    'merit-geometry': { src: '/photos/merit-geometry.jpg', w: 1400, h: 1088, title: 'Honors Geometry', caption: 'Merit Award, Paris High School, 2023–2024.' },
+    'merit-biology': { src: '/photos/merit-biology.jpg', w: 1400, h: 1079, title: 'Honors Biology', caption: 'Merit Award, Paris High School, 2023–2024.' },
+    'merit-chemistry': { src: '/photos/merit-chemistry.jpg', w: 1400, h: 1076, title: 'Chemistry', caption: 'Certificate of Merit, Pre-AP Chemistry, Paris High School, 2024–2025.' },
+    'merit-world-history': { src: '/photos/merit-world-history.jpg', w: 1400, h: 1076, title: 'Honors World History', caption: 'Certificate of Merit, Paris High School, 2024–2025.' },
+    'merit-ap-lang': { src: '/photos/merit-ap-lang.jpg', w: 1400, h: 1090, title: 'AP English Language', caption: 'Certificate of Merit, Paris High School, 2025–2026.' },
+}
+
+// How the hidden /photos/ page groups the pictures (it lists every one, with its own link).
+export const photoGroups = [
+    { title: 'Moments', kind: 'moments', ids: ['robotics', 'debate', 'boys-state', 'upward-bound', 'sculpting', 'spanish-honor-society', 'fps', 'catgut', 'mole-day'] },
+    { title: 'Certificates & records', kind: 'records', ids: ['usnco', 'diamond', 'ap-lang', 'ap-lit', 'merit-ap-lang', 'merit-world-history', 'merit-chemistry', 'merit-geometry', 'merit-biology', 'olympiads'] },
 ]

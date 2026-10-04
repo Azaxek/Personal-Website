@@ -1,16 +1,21 @@
 import './style.css'
 import { lenis } from './smooth.js'
-import { initFx, onSwipe } from './fx.js'
+import { initFx, onSwipe, bringFxToFront } from './fx.js'
 import { initIMacScene } from './imac-scene.js'
-import { owner, hero, education, projects, experience, leadership, honors, summer, skills, press } from './data.js'
+import { owner, hero, education, projects, experience, leadership, honors, summer, skills, press, photos as photoData } from './data.js'
 
 const $ = (sel, root = document) => root.querySelector(sel)
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
 const el = (tag, cls, html) => { const e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e }
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c]))
 
-// Escaped text where [label](https://url) becomes a link, the same way the resume writes them.
-const rich = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+// Escaped text with two kinds of links, written the way the resume writes them:
+//   [label](https://url)  -> an article / outside page: opens in a new tab, marked with ↗
+//   [label](photo:id)     -> a photo: opens in the on-site viewer, never leaves the page
+const rich = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|photo:[a-z0-9-]+)\)/g, (_, label, target) => (target.startsWith('photo:')
+    ? `<a href="#photos" class="photo-link" data-photo="${target.slice(6)}" data-cursor="view">${label}</a>`
+    : `<a href="${target}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${label}</a>`))
+
 
 function prompt(cmd)
 {
@@ -22,27 +27,13 @@ function prompt(cmd)
 function entryLinks(links)
 {
     if(!links || !links.length) return ''
-    return `<div class="entry-links">${links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join('')}</div>`
+    return `<div class="entry-links">${links.map((l) => `<a href="${esc(l.url)}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${esc(l.label)}</a>`).join('')}</div>`
 }
 
 function tagsRow(tags)
 {
     if(!tags || !tags.length) return ''
     return `<div class="tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>`
-}
-
-function photoStrip(photos)
-{
-    if(!photos || !photos.length) return ''
-    return `<div class="photo-strip">${photos.map((src, i) => `<img src="${esc(src)}" data-i="${i}" alt="">`).join('')}</div>`
-}
-
-function wirePhotoStrip(container, photos)
-{
-    if(!photos || !photos.length) return
-    $$('.photo-strip img', container).forEach((img) => {
-        img.onclick = () => { if(!img.closest('.carousel-wrap')?.dataset.moved) openLightbox(photos, +img.dataset.i) } // not the click that ends a drag
-    })
 }
 
 function renderProject(p)
@@ -59,9 +50,7 @@ function renderProject(p)
         <ul>${(p.facts || []).map((f) => `<li>${rich(f)}</li>`).join('')}</ul>
         ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
-        ${photoStrip(p.photos)}
     `
-    wirePhotoStrip(e, p.photos)
     return e
 }
 
@@ -75,9 +64,7 @@ function renderRole(r)
         ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         ${body}${bullets}
         ${tagsRow(r.tags)}
-        ${photoStrip(r.photos)}
     `
-    wirePhotoStrip(e, r.photos)
     return e
 }
 
@@ -93,9 +80,7 @@ function renderCard(r)
         ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         <div class="clamp">${body}${bullets}</div>
         ${tagsRow(r.tags)}
-        ${photoStrip(r.photos)}
     `
-    wirePhotoStrip(e, r.photos)
     const clamp = $('.clamp', e)
     requestAnimationFrame(() => {
         if(clamp.scrollHeight > clamp.clientHeight + 2) {
@@ -115,7 +100,7 @@ function renderCard(r)
 function carousel(items, renderer)
 {
     const wrap = el('div', 'carousel-wrap')
-    wrap.appendChild(el('div', 'carousel-controls', '<span class="hint">drag · swipe</span><button type="button" class="prev" aria-label="Previous">‹</button><button type="button" class="next" aria-label="Next">›</button>'))
+    wrap.appendChild(el('div', 'carousel-controls', '<span class="hint">swipe · drag · scroll sideways</span><button type="button" class="prev" aria-label="Previous">‹</button><button type="button" class="next" aria-label="Next">›</button>'))
     const view = el('div', 'carousel')
     view.dataset.cursor = 'drag'
     const track = el('div', 'track')
@@ -127,11 +112,11 @@ function carousel(items, renderer)
 
 // ---------- photo lightbox ----------
 
-let lbPhotos = [], lbIndex = 0
+let lbPhotos = [], lbIndex = 0 // lbPhotos is a list of photo ids
 
-function openLightbox(photos, index = 0)
+function openLightbox(ids, index = 0)
 {
-    lbPhotos = photos; lbIndex = index
+    lbPhotos = ids; lbIndex = Math.max(0, index)
     renderLightbox()
     lenis?.stop()
     document.addEventListener('keydown', onLightboxKey)
@@ -141,6 +126,7 @@ function closeLightbox()
 {
     const box = $('#lightbox')
     box?._killSwipe?.()
+    if(box?.open) box.close()
     box?.remove()
     lenis?.start()
     document.removeEventListener('keydown', onLightboxKey)
@@ -163,17 +149,28 @@ function renderLightbox()
 {
     let box = $('#lightbox')
     if(!box) {
-        box = el('div', 'lightbox'); box.id = 'lightbox'; document.body.appendChild(box)
+        // a modal <dialog> lives in the browser's top layer, so no transformed card or carousel can ever paint over it
+        box = document.createElement('dialog'); box.className = 'lightbox'; box.id = 'lightbox'
+        document.body.appendChild(box)
+        box.showModal()
+        bringFxToFront() // the cursor must stay above the viewer
+        box.addEventListener('cancel', (e) => { e.preventDefault(); closeLightbox() }) // Esc
         box._killSwipe = onSwipe(box, { left: () => stepLightbox(1), right: () => stepLightbox(-1) }) // swipe or drag between photos
     }
     const multi = lbPhotos.length > 1
+    const p = photoData[lbPhotos[lbIndex]]
     box.innerHTML = `
         <button type="button" class="lb-close" aria-label="Close">✕</button>
         ${multi ? '<button type="button" class="lb-prev" aria-label="Previous photo">‹</button>' : ''}
-        <img src="${esc(lbPhotos[lbIndex])}" alt="">
+        <figure class="lb-figure">
+            <img src="${esc(p.src)}" alt="${esc(p.title)}: ${esc(p.caption)}" draggable="false">
+            <figcaption><b>${esc(p.title)}</b><span>${esc(p.caption)}</span></figcaption>
+        </figure>
         ${multi ? '<button type="button" class="lb-next" aria-label="Next photo">›</button>' : ''}
         ${multi ? `<span class="lb-count">${lbIndex + 1} / ${lbPhotos.length}</span>` : ''}
     `
+    const next = photoData[lbPhotos[(lbIndex + 1) % lbPhotos.length]]
+    if(next) new Image().src = next.src // preload the next one so stepping feels instant
     box.onclick = (e) => { if(e.target === box) closeLightbox() }
     $('.lb-close', box).onclick = closeLightbox
     if(multi) { $('.lb-prev', box).onclick = () => stepLightbox(-1); $('.lb-next', box).onclick = () => stepLightbox(1) }
@@ -216,8 +213,9 @@ function renderBoot()
             <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">linkedin</a>
             <a href="${esc(owner.github)}" target="_blank" rel="noopener">github</a>
         </div>
-        ${prompt('cat press.log')}
-        <div class="seen-in">${press.map((p) => `<a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.label)}</a>`).join('')}</div>
+        ${prompt('cat articles.log')}
+        <div class="seen-in">${press.map((p) => `<a href="${esc(p.url)}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${esc(p.label)}</a>`).join('')}</div>
+        <p class="legend"><span class="ext-mark">↗</span> an article — opens in a new tab <i>·</i> <span class="ph-mark">▣</span> a photo — hover to preview, click to enlarge</p>
         <p class="prompt cursor"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span></p>
     `
     return b
@@ -281,6 +279,14 @@ function build()
     content.appendChild(section('skills', 'cat skills.txt', renderSkills()))
     content.appendChild(section('contact', 'mail --compose', renderContact()))
 }
+
+// A photo word opens its picture larger, in the on-site viewer (hovering it shows a preview — see fx.js).
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-photo]')
+    if(!link) return
+    e.preventDefault()
+    openLightbox([link.dataset.photo], 0)
+})
 
 build()
 initFx() // after build(): it wires up the DOM that build() just created

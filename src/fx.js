@@ -1,7 +1,8 @@
 // Interaction layer for everything below the 3D hero: cursor, hover/scramble/word-glow, scroll
-// reveals, tilt + spotlight cards, magnetic buttons, a draggable carousel, click bursts and a
-// cursor-reactive particle backdrop. Motion is GSAP (+ its SplitText/ScrambleText/Draggable/
-// Inertia/Observer plugins); vanilla-tilt, canvas-confetti and tsParticles cover the rest.
+// reveals, tilt + spotlight cards, magnetic buttons, a draggable carousel (mouse, touch and
+// two-finger trackpad), a soft click ping and a cursor-reactive particle backdrop. Motion is GSAP
+// (+ its SplitText/ScrambleText/Draggable/Inertia/Observer plugins); vanilla-tilt and tsParticles
+// cover the rest.
 // Everything is gated on prefers-reduced-motion, and the pointer-only bits on a real mouse.
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -12,6 +13,7 @@ import { InertiaPlugin } from 'gsap/InertiaPlugin'
 import { Observer } from 'gsap/Observer'
 import VanillaTilt from 'vanilla-tilt'
 import { lenis } from './smooth.js'
+import { photos as photoData } from './data.js'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin, Draggable, InertiaPlugin, Observer)
 
@@ -23,6 +25,27 @@ const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 const GLYPHS = '01{}<>/\\_$#%&*'
 const COLORS = ['#5dffb0', '#5ad4ff', '#ff6bd6', '#ffd166']
 
+// The cursor and the click ping live in one popover, i.e. the browser's top layer: carousel cards (which slide and
+// tilt, so the browser draws them as separate GPU layers) can never paint over them. A popover opened later sits
+// above one opened earlier, so bringFxToFront() re-opens this one after the photo viewer / preview appear.
+const topLayer = typeof HTMLElement.prototype.showPopover === 'function'
+let fxLayer = null
+function fxRoot()
+{
+    if(fxLayer) return fxLayer
+    fxLayer = mk('div', 'fx-layer')
+    if(topLayer) fxLayer.setAttribute('popover', 'manual')
+    document.body.appendChild(fxLayer)
+    if(topLayer) fxLayer.showPopover()
+    return fxLayer
+}
+export function bringFxToFront()
+{
+    if(!fxLayer || !topLayer || !fxLayer.matches(':popover-open')) return
+    fxLayer.hidePopover()
+    fxLayer.showPopover()
+}
+
 // ---------- cursor: dot + lagging ring that morphs over links / the carousel / photos ----------
 
 function initCursor()
@@ -30,7 +53,7 @@ function initCursor()
     if(!fine || reduced) return
     const ring = mk('div', 'cursor-ring'), dot = mk('div', 'cursor-dot'), label = mk('span', 'cursor-label')
     ring.appendChild(label)
-    document.body.append(ring, dot)
+    fxRoot().append(ring, dot)
     document.body.classList.add('has-cursor')
     gsap.set([ring, dot], { xPercent: -50, yPercent: -50, autoAlpha: 0 })
     const rx = gsap.quickTo(ring, 'x', { duration: 0.4, ease: 'power3' }), ry = gsap.quickTo(ring, 'y', { duration: 0.4, ease: 'power3' })
@@ -44,8 +67,8 @@ function initCursor()
     document.documentElement.addEventListener('pointerleave', () => gsap.to([ring, dot], { autoAlpha: 0, duration: 0.2 }))
     document.documentElement.addEventListener('pointerenter', () => { if(seen) gsap.to([ring, dot], { autoAlpha: 1, duration: 0.2 }) })
     window.addEventListener('pointerover', (e) => {
-        const t = e.target.closest?.('[data-cursor], a, button, .photo-strip img')
-        const kind = !t ? '' : t.dataset.cursor || (t.matches('.photo-strip img') ? 'view' : 'link')
+        const t = e.target.closest?.('[data-cursor], a, button')
+        const kind = !t ? '' : t.dataset.cursor || 'link'
         ring.dataset.state = kind
         label.textContent = kind === 'drag' || kind === 'view' ? kind : ''
     })
@@ -57,7 +80,7 @@ function initCursor()
 
 function initNav()
 {
-    $$('#top nav a[href^="#"]').forEach((a) => {
+    $$('#top nav a[href^="#"], #foot nav a[href^="#"]').forEach((a) => {
         const sec = $(a.getAttribute('href'))
         if(!sec) return
         a.addEventListener('click', (e) => {
@@ -79,13 +102,15 @@ function initProgress()
 
 // ---------- text: scramble on hover, word-glow trail, decode prompts on scroll ----------
 
+// Only the short labels (nav, brand, contact buttons) re-type on hover, quickly and with plain letters —
+// body text and headings stay still so reading isn't distracting.
 function initScramble()
 {
     if(reduced) return
-    $$('#top nav a, #top .brand, .links-row a, .entry-links a, .entry h3, .card h3, .seen-in a, .skill-group h3').forEach((t) => {
+    $$('#top nav a, #top .brand, .links-row a').forEach((t) => {
         if(t.children.length) return
         const text = t.textContent
-        t.addEventListener('pointerenter', () => gsap.to(t, { duration: 0.6, ease: 'none', overwrite: true, scrambleText: { text, chars: GLYPHS, speed: 0.8, revealDelay: 0.05 } }))
+        t.addEventListener('pointerenter', () => gsap.to(t, { duration: 0.35, ease: 'none', overwrite: true, scrambleText: { text, chars: 'lowerCase', speed: 1.2, revealDelay: 0.03 } }))
     })
 }
 
@@ -132,19 +157,19 @@ function initReveal()
 function initHoverCards()
 {
     if(!fine || reduced) return
-    VanillaTilt.init($$('.card'), { max: 7, speed: 500, glare: true, 'max-glare': 0.14, scale: 1.02, perspective: 900 })
-    VanillaTilt.init($$('.stat'), { max: 10, speed: 500, scale: 1.05, perspective: 600 })
+    VanillaTilt.init($$('.card'), { max: 3, speed: 700, glare: true, 'max-glare': 0.08, scale: 1, perspective: 1200 }) // a gentle lean, no scale-up
+    VanillaTilt.init($$('.stat'), { max: 4, speed: 700, scale: 1, perspective: 900 })
     $$('.entry, .card, .skill-group').forEach((e) => e.addEventListener('pointermove', (ev) => {
         const r = e.getBoundingClientRect()
         e.style.setProperty('--mx', `${ev.clientX - r.left}px`)
         e.style.setProperty('--my', `${ev.clientY - r.top}px`)
     }))
     $$('.links-row a, .carousel-controls button').forEach((m) => {
-        const x = gsap.quickTo(m, 'x', { duration: 0.6, ease: 'elastic.out(1, 0.5)' }), y = gsap.quickTo(m, 'y', { duration: 0.6, ease: 'elastic.out(1, 0.5)' })
+        const x = gsap.quickTo(m, 'x', { duration: 0.5, ease: 'power3.out' }), y = gsap.quickTo(m, 'y', { duration: 0.5, ease: 'power3.out' })
         m.addEventListener('pointermove', (e) => {
             const r = m.getBoundingClientRect()
-            x((e.clientX - (r.left + r.width / 2)) * 0.35)
-            y((e.clientY - (r.top + r.height / 2)) * 0.35)
+            x((e.clientX - (r.left + r.width / 2)) * 0.15)
+            y((e.clientY - (r.top + r.height / 2)) * 0.15)
         })
         m.addEventListener('pointerleave', () => { x(0); y(0) })
     })
@@ -165,10 +190,12 @@ function initCarousels()
             return max
         }
         const nearest = (v) => snaps.reduce((a, b) => (Math.abs(b - v) < Math.abs(a - v) ? b : a))
-        measure()
+        let maxX = measure()
+        let resting = 0, ourSlide = false // ourSlide: one of our own settle/arrow slides is running, heading for 'resting' (so a quick second swipe builds on that, not on a half-finished slide)
         const drag = Draggable.create(track, {
             type: 'x', bounds: view, inertia: true, edgeResistance: 0.85, cursor: 'inherit', activeCursor: 'inherit',
             snap: { x: nearest },
+            onPress() { ourSlide = false },
             onDragStart() { wrap.dataset.moved = '1' }, // lets click handlers ignore the click that ends a drag
             onRelease() { setTimeout(() => { delete wrap.dataset.moved }, 80) },
         })[0]
@@ -176,16 +203,54 @@ function initCarousels()
             const x = gsap.getProperty(track, 'x')
             const next = dir > 0 ? snaps.find((s) => s < x - 4) : [...snaps].reverse().find((s) => s > x + 4)
             if(next == null) return
-            gsap.to(track, { x: next, duration: 0.8, ease: 'power3.out', overwrite: true, onUpdate: () => drag.update() })
+            resting = next; ourSlide = true
+            gsap.to(track, { x: next, duration: 0.8, ease: 'power3.out', overwrite: true, onUpdate: () => drag.update(), onComplete: () => { ourSlide = false } })
         }
         $('.prev', wrap).addEventListener('click', () => go(-1))
         $('.next', wrap).addEventListener('click', () => go(1))
+
+        // Two-finger swipe on a trackpad (or shift + wheel): sideways wheel movement drags the track along with
+        // the fingers, then it settles on a card. Mostly-vertical gestures still scroll the page.
+        //  - the axis is decided from the first moments of the gesture (trackpad swipes drift diagonally), not one noisy event
+        //  - Firefox reports lines / pages instead of pixels, so deltas are normalised
+        //  - a light flick still moves one card in the swipe's direction, instead of springing back to where it started
+        let swipeFrom = 0, swipeBase = 0, swiping = false, sx = 0, sy = 0, settle = 0, reset = 0
+        wrap.addEventListener('wheel', (e) => {
+            if(!maxX) return
+            const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? view.clientWidth : 1
+            const dx = e.deltaX * unit, dy = e.deltaY * unit
+            if(!swiping) {
+                sx += dx; sy += dy
+                clearTimeout(reset); reset = setTimeout(() => { sx = sy = 0 }, 200)
+                if(Math.abs(sx) < 3 || Math.abs(sx) <= Math.abs(sy) * 1.15) return // mostly vertical: the page scrolls
+                swiping = true
+                swipeFrom = gsap.getProperty(track, 'x')
+                swipeBase = ourSlide ? resting : swipeFrom // a slide may still be running: build on where it was heading
+                ourSlide = false
+                gsap.killTweensOf(track) // the new swipe takes over, so the old slide can't fight it
+            }
+            e.preventDefault() // also stops the browser treating a sideways swipe as back/forward
+            gsap.set(track, { x: gsap.utils.clamp(-maxX, 0, gsap.getProperty(track, 'x') - dx) })
+            drag.update()
+            clearTimeout(settle)
+            settle = setTimeout(() => {
+                const x = gsap.getProperty(track, 'x'), moved = x - swipeFrom
+                let target = nearest(swipeBase + moved)
+                if(target === nearest(swipeBase) && Math.abs(moved) > 30) {
+                    target = moved < 0 ? (snaps.find((s) => s < swipeBase - 4) ?? target) : ([...snaps].reverse().find((s) => s > swipeBase + 4) ?? target)
+                }
+                swiping = false; sx = sy = 0
+                resting = target; ourSlide = true
+                gsap.to(track, { x: target, duration: 0.6, ease: 'power3.out', overwrite: true, onUpdate: () => drag.update(), onComplete: () => { ourSlide = false } })
+            }, 140)
+        }, { passive: false })
+
         window.addEventListener('resize', () => {
-            const max = measure()
+            maxX = measure()
             drag.applyBounds(view)
             gsap.set(track, { x: nearest(gsap.getProperty(track, 'x')) })
             drag.update()
-            max ? drag.enable() : drag.disable()
+            maxX ? drag.enable() : drag.disable()
         })
     })
 }
@@ -197,29 +262,98 @@ export function onSwipe(target, { left, right })
     return () => o.kill()
 }
 
-// ---------- click: expanding ring + a burst of code glyphs in the accent colors ----------
+// ---------- photos: hover a blue photo word and its picture pops up beside it (click enlarges, in main.js) ----------
+
+function initPhotoPeek()
+{
+    if(!fine) return // touch has no hover — a tap opens the viewer instead
+    const peek = mk('div', 'photo-peek')
+    peek.innerHTML = '<img alt=""><div class="cap"><b></b><span></span></div>'
+    // As a popover it lives in the browser's top layer, so a tilted or sliding carousel card can't paint over it.
+    if(topLayer) peek.setAttribute('popover', 'manual')
+    document.body.appendChild(peek)
+    const img = $('img', peek), title = $('b', peek), cap = $('span', peek)
+    const MAX_W = 280, MAX_H = 300
+    let current = null, hideTimer = 0, closeTimer = 0
+
+    // Fetch each photo's file as its word scrolls near the screen, so the preview is instant when hovered.
+    const warm = new IntersectionObserver((hits) => hits.forEach((h) => {
+        if(!h.isIntersecting) return
+        const p = photoData[h.target.dataset.photo]
+        if(p) new Image().src = p.src
+        warm.unobserve(h.target)
+    }), { rootMargin: '500px' })
+    $$('a.photo-link').forEach((a) => warm.observe(a))
+
+    // fade out, then (only if it hasn't been re-opened meanwhile) take it out of the top layer
+    const conceal = () => {
+        peek.classList.remove('open'); current = null
+        if(!topLayer) return
+        clearTimeout(closeTimer)
+        closeTimer = setTimeout(() => { if(!peek.classList.contains('open') && peek.matches(':popover-open')) peek.hidePopover() }, 220)
+    }
+    const hide = () => { clearTimeout(hideTimer); hideTimer = setTimeout(conceal, 70) }
+
+    function show(a, x, y)
+    {
+        const p = photoData[a.dataset.photo]
+        if(!p) return
+        clearTimeout(hideTimer); clearTimeout(closeTimer)
+        if(topLayer && !peek.matches(':popover-open')) { peek.showPopover(); bringFxToFront() }
+        current = a
+        const s = Math.min(MAX_W / p.w, MAX_H / p.h, 1) // the box gets its final size before the file arrives
+        img.style.width = `${Math.round(p.w * s)}px`
+        img.style.height = `${Math.round(p.h * s)}px`
+        img.classList.remove('on')
+        img.onload = () => img.classList.add('on')
+        img.src = p.src
+        if(img.complete && img.naturalWidth) img.classList.add('on')
+        title.textContent = p.title
+        cap.textContent = p.caption
+
+        // Sit above the line of text the pointer is on (a link can wrap across lines), or below if there's no room.
+        const rects = [...a.getClientRects()]
+        const r = rects.find((q) => y >= q.top - 2 && y <= q.bottom + 2 && x >= q.left - 2 && x <= q.right + 2) || rects[0]
+        const w = peek.offsetWidth, h = peek.offsetHeight
+        const left = gsap.utils.clamp(10, window.innerWidth - w - 10, r.left + r.width / 2 - w / 2)
+        const above = r.top - h - 12
+        peek.style.left = `${left}px`
+        peek.style.top = `${above >= 10 ? above : Math.min(window.innerHeight - h - 10, r.bottom + 12)}px`
+        peek.classList.add('open')
+    }
+
+    document.addEventListener('mouseover', (e) => {
+        const a = e.target.closest?.('a.photo-link')
+        if(!a) return
+        if(a === current) clearTimeout(hideTimer) // moved between words inside the same link
+        else show(a, e.clientX, e.clientY)
+    })
+    document.addEventListener('mouseout', (e) => {
+        const from = e.target.closest?.('a.photo-link')
+        if(from && from !== e.relatedTarget?.closest?.('a.photo-link')) hide()
+    })
+    // keyboard users get the same preview when they tab onto a photo word
+    document.addEventListener('focusin', (e) => {
+        const a = e.target.closest?.('a.photo-link')
+        if(a) { const r = a.getBoundingClientRect(); show(a, r.left + 1, r.top + 1) }
+    })
+    document.addEventListener('focusout', (e) => { if(e.target.closest?.('a.photo-link')) hide() })
+    document.addEventListener('click', (e) => { if(e.target.closest?.('a.photo-link')) { clearTimeout(hideTimer); conceal() } })
+    window.addEventListener('scroll', () => { if(current) conceal() }, { passive: true }) // it's anchored to the word, so drop it when the page moves
+}
+
+// ---------- click: a soft phosphor "ping" — a thin ring spreads from the pointer while a dot fades ----------
 
 function initClickFx()
 {
     if(reduced) return
-    let confetti = null, shapes = []
-    const load = async () => {
-        if(confetti) return
-        confetti = (await import('canvas-confetti')).default
-        const font = '"Space Grotesk", ui-sans-serif, sans-serif'
-        shapes = COLORS.flatMap((color) => ['0', '1', '{', '}', '$', '/', '<', '>'].map((text) => confetti.shapeFromText({ text, scalar: 1.6, color, fontFamily: font })))
-    }
-    window.addEventListener('click', async (e) => {
+    window.addEventListener('click', (e) => {
         if(window.getSelection()?.toString()) return
-        const ring = mk('div', 'click-ring')
-        document.body.appendChild(ring)
-        gsap.fromTo(ring, { x: e.clientX, y: e.clientY, xPercent: -50, yPercent: -50, scale: 0.2, opacity: 0.9 }, { scale: 1.8, opacity: 0, duration: 0.6, ease: 'power2.out', onComplete: () => ring.remove() })
-        await load()
-        const big = !!e.target.closest?.('a, button')
-        confetti({
-            particleCount: big ? 26 : 10, spread: 360, startVelocity: big ? 24 : 15, ticks: 55, gravity: 0.7, decay: 0.9, scalar: 1.6,
-            shapes, zIndex: 400, disableForReducedMotion: true, origin: { x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight },
-        })
+        const ring = mk('div', 'click-ring'), dot = mk('div', 'click-dot')
+        fxRoot().append(ring, dot)
+        const at = { x: e.clientX, y: e.clientY, xPercent: -50, yPercent: -50 }
+        gsap.fromTo(ring, { ...at, scale: 0.3, opacity: 0.55 }, { scale: 1.5, opacity: 0, duration: 0.7, ease: 'power3.out', onComplete: () => ring.remove() })
+        gsap.fromTo(dot, { ...at, scale: 1, opacity: 0.9 }, { scale: 0.2, opacity: 0, duration: 0.35, ease: 'power2.out', onComplete: () => dot.remove() })
     })
 }
 
@@ -264,6 +398,7 @@ export function initFx()
     initReveal()
     initHoverCards()
     initCarousels()
+    initPhotoPeek()
     initClickFx()
     initBackground().catch((err) => console.warn('particles backdrop failed', err))
     // SplitText + web fonts both change layout after the triggers above were measured.
