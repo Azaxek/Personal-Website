@@ -70,7 +70,7 @@ export const projects = [
         body: 'An AI-powered traffic light system trained to fit inside any camera a locality already has.',
         facts: ['November 2025 – March 2026', 'Diamond Challenge semifinalist'],
         tags: ['AI', 'Civic tech'],
-        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/FlowState' }],
+        links: [{ label: 'Live demo', url: 'https://azaxek.github.io/FlowState/' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/FlowState' }],
     },
     {
         name: 'Vulnerability testing on GitHub', status: 'built',
@@ -94,19 +94,19 @@ export const projects = [
     },
     {
         name: 'NextStep', status: 'live',
-        tagline: 'An AI career coach for students',
-        body: 'A web platform, built for the Congressional App Challenge, that lets students explore possible career paths with AI guidance.',
-        facts: ['TypeScript + AI integration', 'Congressional App Challenge 2025'],
-        tags: ['TypeScript', 'AI', 'Education'],
+        tagline: 'A career-exploration tool for students',
+        body: 'A web platform, built for the Congressional App Challenge, that lets students explore possible career paths and get a personalized roadmap of careers, schools or training routes, and next steps.',
+        facts: ['React + a deterministic recommendation engine (same answers, same plan)', 'Congressional App Challenge 2025'],
+        tags: ['React', 'Education'],
         links: [{ label: 'Open NextStep', url: 'https://thenextstep.vercel.app/' }],
     },
     {
         name: 'OpenCouncil', status: 'built',
         tagline: 'Paris, Texas city council meetings, in plain English',
         body: 'Fetches Paris, Texas city council agendas and minutes, summarizes them with an LLM, and shows them in a web app so residents can follow what their city is doing and when to speak up.',
-        facts: ['LLM summaries (DeepSeek), Supabase database, deployed on Vercel', 'Public repository on GitHub'],
+        facts: ['LLM summaries (Groq, Llama 3.1), Supabase database, deployed on Vercel', 'Public repository on GitHub'],
         tags: ['Civic tech', 'LLM summarization'],
-        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenCouncil' }],
+        links: [{ label: 'Live demo', url: 'https://open-council-alpha.vercel.app/samples' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenCouncil' }],
     },
 ]
 
