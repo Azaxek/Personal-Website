@@ -1,4 +1,4 @@
-# Arjan Khadka — Portfolio
+# Portfolio Site
 
 **Live site:** [ramen-portfolio-nine.vercel.app](https://ramen-portfolio-nine.vercel.app)
 
