@@ -48,6 +48,9 @@ export function bringFxToFront()
 
 // ---------- cursor: dot + lagging ring that morphs over links / the carousel / photos ----------
 
+// over anything that isn't a link, the ring still answers — a small, faint swell
+const SOFT = '.entry, .card, .skill-group, .stat, .prompt, .boot .out, .ticker, .legend, .photo-list li, .photo-page img'
+
 function initCursor()
 {
     if(!fine || reduced) return
@@ -68,7 +71,7 @@ function initCursor()
     document.documentElement.addEventListener('pointerenter', () => { if(seen) gsap.to([ring, dot], { autoAlpha: 1, duration: 0.2 }) })
     window.addEventListener('pointerover', (e) => {
         const t = e.target.closest?.('[data-cursor], a, button')
-        const kind = !t ? '' : t.dataset.cursor || 'link'
+        const kind = t ? t.dataset.cursor || 'link' : e.target.closest?.(SOFT) ? 'soft' : ''
         ring.dataset.state = kind
         label.textContent = kind === 'drag' || kind === 'view' ? kind : ''
     })

@@ -89,6 +89,7 @@ body.has-cursor, body.has-cursor * { cursor: none !important; }
     display: flex; align-items: center; justify-content: center;
     transition: width .25s ease, height .25s ease, background .25s ease, border-color .25s ease;
 }
+.cursor-ring[data-state="soft"] { width: 44px; height: 44px; background: rgba(93, 255, 176, .05); border-color: rgba(93, 255, 176, .85); }
 .cursor-ring[data-state="link"] { width: 58px; height: 58px; background: rgba(93, 255, 176, .1); border-color: var(--accent); }
 .cursor-ring[data-state="drag"], .cursor-ring[data-state="view"] { width: 76px; height: 76px; background: rgba(93, 255, 176, .12); border-color: var(--accent); }
 .cursor-label { font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); }
@@ -97,7 +98,7 @@ body.has-cursor, body.has-cursor * { cursor: none !important; }
 
 /* words warm up under the cursor and fade back — color only, nothing moves, so reading stays calm */
 .w { transition: color .8s ease, text-shadow .8s ease; }
-.w:hover { color: #c9ffe2; text-shadow: 0 0 10px rgba(93, 255, 176, .3); transition-duration: .1s; }
+.w:hover { color: #8dffc6; text-shadow: 0 0 12px rgba(93, 255, 176, .4); transition-duration: .1s; }
 a .w:hover { color: inherit; text-shadow: none; } /* words inside links keep the link's own color */
 
 /* pointer-following spotlight (--mx/--my set in fx.js) */
@@ -392,3 +393,18 @@ button.copy.done { color: #d6ffe9; border-color: var(--accent); }
     .photo-list button.copy { margin-left: 78px; }
     .photo-page .share .ext { margin-left: 0; }
 }
+
+/* ---------- hover: every small thing answers the cursor, softly (color / glow only — nothing moves) ---------- */
+
+.stat b, .stat span, .pill, .ticker span, .prompt .cmd, .see-more, .entry .meta, .card .meta, .skill-group h3, .photo-list .thumb img, .photo-page .full img {
+    transition: color .25s ease, text-shadow .25s ease, box-shadow .25s ease, border-color .25s ease, filter .25s ease;
+}
+.stat:hover b { text-shadow: 0 0 30px rgba(93, 255, 176, .85); }
+.stat:hover span { color: var(--ink); }
+.pill:hover { filter: brightness(1.35); }
+.entry .tags span:hover, .card .tags span:hover { color: var(--accent); border-color: var(--accent-dim); }
+.ticker span:hover { border-color: rgba(255, 107, 214, .6); box-shadow: 0 0 16px -4px rgba(255, 107, 214, .9); }
+.prompt:hover .cmd { text-shadow: 0 0 22px rgba(93, 255, 176, .75); }
+.entry:hover .meta, .card:hover .meta, .skill-group:hover h3 { color: #8aa399; }
+.see-more:hover { text-decoration: underline; text-underline-offset: .2em; }
+.photo-list li:hover .thumb img, .photo-page .full img:hover { border-color: var(--accent-dim); }
