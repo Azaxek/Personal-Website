@@ -309,7 +309,7 @@ export const press = [
 export const photos = {
     'robotics': { src: '/photos/robotics.jpg', w: 1400, h: 689, title: 'VEX Robotics', caption: 'Judges Award, VEX V5 Competition — Team 1394B.' },
     'debate': { src: '/photos/debate.jpg', w: 647, h: 1400, title: 'Debate', caption: 'With the team after a tournament round.' },
-    'boys-state': { src: '/photos/boys-state.jpg', w: 960, h: 1280, title: 'Texas Boys State', caption: 'With fellow delegates at Texas Boys State.' },
+    'boys-state': { src: '/photos/boys-state.jpg', w: 1400, h: 935, title: 'Texas Boys State', caption: 'Hutchings City at Texas Boys State, with the Texas State Capitol behind us.' },
     'upward-bound': { src: '/photos/upward-bound.jpg', w: 1400, h: 1050, title: 'Upward Bound', caption: 'On the Upward Bound trip.' },
     'sculpting': { src: '/photos/sculpting.jpg', w: 1400, h: 1050, title: 'Upward Bound sculpting', caption: 'Ceramic pieces made during Upward Bound.' },
     'spanish-honor-society': { src: '/photos/spanish-honor-society.jpg', w: 1400, h: 1050, title: 'Spanish Honor Society', caption: 'Membership certificate, Sociedad Honoraria Hispánica de Paris High School.' },
