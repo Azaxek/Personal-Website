@@ -1,4 +1,6 @@
-# Arjan Khadka — portfolio
+# Arjan Khadka — Portfolio
+
+**Live site:** [ramen-portfolio-nine.vercel.app](https://ramen-portfolio-nine.vercel.app)
 
 A scroll-driven portfolio. An iMac G3 (a real 3D model) turns to face you as you scroll, boots to an Apple
 logo and a terminal, then the camera zooms into the screen and hands off to the readable site below.
