@@ -28,12 +28,12 @@ function row(id)
 
 function renderList(missing)
 {
-    document.title = 'Photos — Arjan Khadka'
+    document.title = 'Photos | Arjan Khadka'
     root.innerHTML = `
         <div class="photo-index">
             <p class="prompt"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span> <span class="cmd">ls photos/</span></p>
             <p class="lead">The pictures behind items on my resume. Each one has its own link.</p>
-            ${missing ? `<p class="note">There's no photo called “${esc(missing)}” — here's everything.</p>` : ''}
+            ${missing ? `<p class="note">There's no photo called “${esc(missing)}”. Here's everything.</p>` : ''}
             ${photoGroups.map((g) => `
                 <h2>${esc(g.title)}</h2>
                 <ul class="photo-list ${esc(g.kind || '')}">${g.ids.map(row).join('')}</ul>`).join('')}
@@ -45,7 +45,7 @@ function renderPhoto(id)
     const p = photos[id]
     const i = ids.indexOf(id)
     const prev = ids[i - 1], next = ids[i + 1]
-    document.title = `${p.title} — Arjan Khadka`
+    document.title = `${p.title} | Arjan Khadka`
     root.innerHTML = `
         <article class="photo-page">
             <a class="back" href="/photos/">← all photos</a>

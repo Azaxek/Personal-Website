@@ -103,6 +103,21 @@ function initProgress()
     gsap.to(bar, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } })
 }
 
+// ---------- "More info" under a project: the extra details unfold in place ----------
+
+function initMore()
+{
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.more-btn')
+        if(!btn) return
+        const open = btn.getAttribute('aria-expanded') !== 'true'
+        btn.setAttribute('aria-expanded', open)
+        btn.firstElementChild.textContent = open ? 'Less info' : 'More info'
+        document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('open', open)
+        setTimeout(() => ScrollTrigger.refresh(), 500) // the page just got taller/shorter: re-measure the nav highlight + progress bar
+    })
+}
+
 // ---------- text: scramble on hover, word-glow trail, decode prompts on scroll ----------
 
 // Only the short labels (nav, brand, contact buttons) re-type on hover, quickly and with plain letters —
@@ -396,6 +411,7 @@ export function initFx()
     initCursor()
     initNav()
     initProgress()
+    initMore()
     initScramble()
     initTextHover()
     initReveal()

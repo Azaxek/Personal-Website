@@ -408,3 +408,21 @@ button.copy.done { color: #d6ffe9; border-color: var(--accent); }
 .entry:hover .meta, .card:hover .meta, .skill-group:hover h3 { color: #8aa399; }
 .see-more:hover { text-decoration: underline; text-underline-offset: .2em; }
 .photo-list li:hover .thumb img, .photo-page .full img:hover { border-color: var(--accent-dim); }
+
+/* ---------- "More info" under a project (main.js moreInfo, fx.js initMore): unfolds in place ---------- */
+
+.more-btn {
+    margin-top: .9em; font: inherit; font-size: .8rem; color: var(--accent); background: none; border: 1px solid var(--line);
+    padding: .3em .85em; border-radius: 4px; cursor: pointer; transition: border-color .2s ease, background .2s ease;
+}
+.more-btn::after { content: '▾'; display: inline-block; margin-left: .55em; transition: transform .3s ease; }
+.more-btn[aria-expanded="true"]::after { transform: rotate(180deg); }
+.more-btn:hover { border-color: var(--accent); background: rgba(93, 255, 176, .07); }
+.more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s ease; }
+.more.open { grid-template-rows: 1fr; }
+.more-inner { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility 0s .45s; } /* hidden = out of the tab order too */
+.more.open .more-inner { visibility: visible; transition-delay: 0s; }
+.more-body { margin-top: 14px; padding: 0 0 4px 16px; border-left: 1px dashed var(--accent-dim); }
+.more-body h4 { margin: 1.6em 0 0; font-size: .74rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--accent3); }
+.more-body > :first-child { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .more, .more-inner, .more-btn::after { transition: none; } }

@@ -36,6 +36,19 @@ function tagsRow(tags)
     return `<div class="tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>`
 }
 
+// "More info" under a project. `more` is a list of { h?: heading, body: [paragraph string | [bullet, ...], ...] }; fx.js opens/closes it.
+function moreInfo(name, blocks)
+{
+    if(!blocks || !blocks.length) return ''
+    const id = `more-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+    const part = (x) => (Array.isArray(x) ? `<ul>${x.map((i) => `<li>${rich(i)}</li>`).join('')}</ul>` : `<p class="body">${rich(x)}</p>`)
+    return `
+        <button type="button" class="more-btn" aria-expanded="false" aria-controls="${id}"><span>More info</span></button>
+        <div class="more" id="${id}"><div class="more-inner"><div class="more-body">
+            ${blocks.map((b) => `${b.h ? `<h4>${esc(b.h)}</h4>` : ''}${b.body.map(part).join('')}`).join('')}
+        </div></div></div>`
+}
+
 function renderProject(p)
 {
     const e = el('article', 'entry')
@@ -50,6 +63,7 @@ function renderProject(p)
         <ul>${(p.facts || []).map((f) => `<li>${rich(f)}</li>`).join('')}</ul>
         ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
+        ${moreInfo(p.name, p.more)}
     `
     return e
 }
@@ -204,7 +218,7 @@ function renderBoot()
         <p class="out dim">${esc(hero.kicker)}</p>
         ${prompt('cat mission.txt')}
         <p class="out">${esc(hero.tagline)}</p>
-        <p class="out quote">"${esc(hero.epigraph.text)}" <span class="dim">— ${esc(hero.epigraph.by)}</span></p>
+        <p class="out quote">"${esc(hero.epigraph.text)}" <span class="dim">- ${esc(hero.epigraph.by)}</span></p>
         ${prompt('stats --live')}
         <div class="stats">${hero.stats.map((s) => `<div class="stat"><b data-count="${s.n}">0${esc(s.suf || '')}</b><span>${esc(s.label)}</span></div>`).join('')}</div>
         ${prompt('open --contact')}
@@ -215,7 +229,7 @@ function renderBoot()
         </div>
         ${prompt('cat articles.log')}
         <div class="seen-in">${press.map((p) => `<a href="${esc(p.url)}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${esc(p.label)}</a>`).join('')}</div>
-        <p class="legend"><span class="ext-mark">↗</span> an article — opens in a new tab <i>·</i> <span class="ph-mark">▣</span> a photo — hover to preview, click to enlarge</p>
+        <p class="legend"><span class="ext-mark">↗</span> an article: opens in a new tab <i>·</i> <span class="ph-mark">▣</span> a photo: hover to preview, click to enlarge</p>
         <p class="prompt cursor"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span></p>
     `
     return b

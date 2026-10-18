@@ -13,12 +13,12 @@ export const hero = {
     kicker: 'Paris, Texas · Class of 2027',
     bio: [
         'Hi, I’m ', { b: 'Arjan' },
-        ' — a student researcher, civic-tech builder, and community organizer.',
+        ', a student researcher, civic-tech builder, and community organizer.',
     ],
     tagline: 'My goal is to minimize structural violence, using technology and speech to get there.',
     epigraph: { text: 'Do what you can, with what you have, where you are.', by: 'Theodore Roosevelt' },
     stats: [
-        { n: 4000, suf: '+', label: 'teams worldwide — 1st place at Purple Comet, Mixed Division' },
+        { n: 4000, suf: '+', label: 'teams worldwide: 1st place at Purple Comet, Mixed Division' },
         { n: 1200, suf: '+', label: 'members in Olympiads Democratized' },
         { n: 1000, suf: '+', label: 'hygiene products given out in Paris, TX' },
         { n: 120000, suf: '+', label: 'users reached organically at SYNK' },
@@ -52,7 +52,7 @@ export const projects = [
     {
         name: 'Game Theory Analysis of Beefing vs. Collaboration', status: 'research',
         tagline: 'A published preprint on content-creator feuds',
-        body: 'Published a preprint that has 3+ citations. Learned multivariable calculus along the way — and that collaboration is better than beefing for content creators.',
+        body: 'Published a preprint that has 3+ citations. Learned multivariable calculus along the way, and that collaboration is better than beefing for content creators.',
         facts: ['May 2025 – July 2026'],
         links: [{ label: 'Read the preprint', url: 'https://arxiv.org/pdf/2506.05373' }],
     },
@@ -63,14 +63,59 @@ export const projects = [
         facts: ['February 2026 – Present', 'Built as part of being a Texas Crime Stoppers Ambassador'],
         tags: ['Open source', 'Public safety'],
         links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenTip-Tipping-Application' }],
+        more: [
+            { h: 'Stack', body: [[
+                'The frontend uses Next.js 16, React 19, TypeScript, Tailwind, with Zod 4 for input validation.',
+                'The database is Postgres via pg done through Neon to make it free.',
+                'For storage: S3-compatible private storage (Cloudflare R2) via the AWS SDK, which allows us to maximize cost reduction.',
+                'To ensure protection against bots we use Cloudflare Turnstile, called without the client IP to ensure their anonymity.',
+                'Other libraries used: web-push for push notifications (VAPID keys), @node-rs/argon2 for password hashing, csv-parse for the school connector.',
+                'Hosting: Vercel.',
+            ]] },
+            { h: 'Anonymity and security', body: [
+                'We use argon2id hashes to store passcodes, claim codes, and staff passwords to secure our platform while keeping the anonymity of the tippers. Additionally, we allow staff to have the opportunity to have two-step verification through an optional time-based OTP with the limits as defined by RFC 6238, which are SHA-1 encryption, 6 digits, 30 seconds to do it, and it’s compatible with most authenticator apps. To prevent bots from overloading the site, rate limiting is put in place; however, due to no IP addresses being stored, sign-in actions are limited per tip ID, which leaves the system somewhat vulnerable to attacks. It also allows us to protect the anonymity of tipsters, and thus we track no IPs, user agents, or device data.',
+            ] },
+            { h: 'Evidence pipeline', body: [
+                'In order to ensure evidence is legally permissible and that it gives away nothing about the tipster, all files are identified by their real bytes and re-encoded to strip metadata such as EXIF, GPS, XMP, container tags, etc., before being saved. Additionally, original file names are deleted, and evidence-based names are given.',
+            ] },
+            { h: 'Retention', body: [
+                'Tips are purged after the organization’s selected retention period has expired for it. Files are removed from storage first. It also deletes anything else that’s obsolete regarding that specific tip.',
+            ] },
+            { h: 'The free system', body: [
+                'The system is completely open-source and free for any Crimestoppers program to run. It is built on completely free signups and thus up to a certain point will always be free, and essentially mimics exactly what the P3 tipping application does but for free.',
+                ['Vercel - Hosting - $0', 'Neon - Server - $0', 'OpenTip GitHub - Code - $0'],
+            ] },
+            { h: 'Future', body: [
+                'I would like to add more features that make this application better than the P3 tipping application and test it in a real Crimestoppers program to see where the bugs and shortcomings are. Some features I plan to add',
+                [
+                    'Wanted and case bulletins with a text-message reply, via an SMS webhook route.',
+                    'A language switching feature (English and Spanish)',
+                    'A program time zone setting',
+                ],
+                'I plan to announce this and release it for programs to use in February at the Texas Campus Crimestoppers Annual Conference.',
+            ] },
+        ],
     },
     {
         name: 'Flux', status: 'built',
-        tagline: 'An AI-powered traffic light system — my Diamond Challenge submission',
+        tagline: 'An AI-powered traffic light system, my Diamond Challenge submission',
         body: 'An AI-powered traffic light system trained to fit inside any camera a locality already has.',
         facts: ['November 2025 – March 2026', 'Diamond Challenge semifinalist'],
         tags: ['AI', 'Civic tech'],
         links: [{ label: 'Live demo', url: 'https://azaxek.github.io/FlowState/' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/FlowState' }],
+        more: [
+            { h: 'Simulation', body: [
+                'Uses SUMO and Traffic Control Interface or TraCI, there’s a traffic light on junction A1 with 30 seconds green and 3 seconds yellow. In the simulation, there’s 100 vehicles, one departing per second on random routes, and vehicles are 5 meters long with a 2.5 meter minimum gap and the top speed being 60 km/h. Teleporting is disabled so waiting times are accurate.',
+                'For the AI to learn made a learning setup.',
+                'It observed through a 4-value vector of vehicle counts per direction approaching (north, south, east, west) within 50 meters of the red light, and the virtual camera added 5% Gaussian noise so we could ensure it would function even in rain and other climate conditions. It could hold the phase or switch to another phase, which was yellow light or green light, depending on the phase it was currently in. The algorithm that we used in order for any of this to work was a PPO from Stable-Baselines3 with the default parameters, and we trained it for 50,000 steps, with the final model being only 138 KB.',
+            ] },
+            { h: 'Results', body: [
+                'Benchmark (default seed):',
+                ['Average wait went from 38.30 s to 21.81 s (−43.05%).', 'Max queue went from 14 to 13.', 'Throughput stayed at 100.'],
+                'Stress test: 3 seeds across 7 simulated conditions. In each of the 7 conditions the PPO model beat fixed timing:',
+                ['Clear: +31.0%.', 'Light rain: +27.9%.', 'Heavy rain: +6.0%.', 'Fog: +27.8%.', 'Night with a low-res camera: +22.8%.', 'Storm with a poor camera: +48.1%.', 'Rush hour: +29.1%.'],
+            ] },
+        ],
     },
     {
         name: 'Vulnerability testing on GitHub', status: 'built',
@@ -87,7 +132,7 @@ export const projects = [
     },
     {
         name: 'AP Chemistry Question Database', status: 'live',
-        tagline: 'Practice questions for AP Chemistry — I maintain it',
+        tagline: 'Practice questions for AP Chemistry, which I maintain',
         body: 'Documented every AP packet the AP Chem instructor handed out and put them into a database for practice. Used a script to scrape the internet for more AP-style questions, and added 800+ questions across all of AP Chemistry.',
         facts: ['August 2026 – Present'],
         tags: ['Education', 'Scraping'],
@@ -99,6 +144,14 @@ export const projects = [
         facts: ['React + a deterministic recommendation engine (same answers, same plan)', 'Congressional App Challenge 2025'],
         tags: ['React', 'Education'],
         links: [{ label: 'Open NextStep', url: 'https://thenextstep.vercel.app/' }],
+        more: [
+            { body: [
+                'We used React 18, React Router 6, Tailwind, and jsPDF, built with Create React App and deployed on Vercel. There is no backend.',
+                'We asked what grade level they were in, what they were interested in, what skills they had, some lifestyle preferences they had, and their educational goals. Then we used a deterministic engine to weigh them. So each selected interest that matches a career scores 3 points, each matched skill scores 1.5, and each lifestyle match scores 1. A career that is attainable through the chosen amount of education adds 2, and one that isn’t subtracts two. For ties, they are broken by interest and then alphabetically, so the output is pretty consistent.',
+                'The knowledge base has 30 careers, each with a short, plain-language description and their rounded pay according to online databases, outlook on the career, and typical programs or routes to enter that career. Additionally, roadmaps are created for each step per grade for the careers, and curated resources are linked such as the Occupational Outlook Handbook, O*NET OnLine, and CareerOneStop.',
+                'After the quiz, it usually outputs the top 4 careers and the reason, usually linking back to one of your earlier choices, plus schools or training routes, a short/medium/long roadmap, next steps, and up to 8 resources.',
+            ] },
+        ],
     },
     {
         name: 'OpenCouncil', status: 'built',
@@ -107,6 +160,26 @@ export const projects = [
         facts: ['LLM summaries (Groq, Llama 3.1), Supabase database, deployed on Vercel', 'Public repository on GitHub'],
         tags: ['Civic tech', 'LLM summarization'],
         links: [{ label: 'Live demo', url: 'https://open-council-alpha.vercel.app/samples' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenCouncil' }],
+        more: [
+            { h: 'Stack', body: [[
+                'The frontend uses Next.js 16 and TypeScript',
+                'The backend is FastAPI with Pydantic, httpx, BeautifulSoup, and PyPDF2. It runs in Docker on a Hugging Face Space in order to keep everything free.',
+                'The backend uses PostgreSQL on Supabase through the pure-Python pg8000 driver to avoid native dependencies and to keep everything free.',
+                'Hosting: the frontend is on Vercel and proxies /api/* to the Space, which allows it to be maintained at no cost.',
+            ]] },
+            { h: 'Connectors', body: [
+                'We use Laserfiche for Paris city council minutes, which uses the site’s RSS feeds and a document viewer to attain the page images.',
+                'To adapt to other cities, I made a generic PDF scraper which we use for Sulphur Springs, and integrated OnBase for the city of Frisco.',
+                'All the cities that we currently have integrated and their settings are in the cities.json on GitHub.',
+            ] },
+            { h: 'Document pipeline', body: [
+                'Basically, this works through scraping the minutes, because the Paris minutes are scanned images or PDFs. So the connector downloads each page image. Then the text recognition goes through three systems: embedded text extraction, OCR.space, and finally the Hugging Face models. The summarizer then returns structured JSON from a basic prompt that asks for life-centric categories and impacts for each of the minutes or for the most important parts of the minutes - examples include Your Tax Dollars and Your Neighborhood. The model used for this is Llama 3.1 8B via Groq, as it is completely free.',
+            ] },
+            { h: 'Ideas for the future', body: [
+                'Adding a volunteer system to allow other people to use their AIs, like Claude, to come in and work on integrating more cities into the system. The system is similar to what Elder Plinius did with [V3R1T4S](https://github.com/elder-plinius/V3R1T4S), as it allows people to send their agents to work on projects to help humanity when they have extra credits to spare.',
+                'I would also like to add on a system to allow human volunteers to summarize city council minutes on their own and integrate their own cities into the system. Additionally, volunteers could verify the AI-summarized impacts and such before allowing it to be published on the site.',
+            ] },
+        ],
     },
 ]
 
@@ -114,7 +187,7 @@ export const experience = [
     {
         title: 'Crime Stoppers Ambassador', meta: '[Texas Association for Crime Stoppers](https://myparistexas.com/paris-isd-students-earn-top-honors-at-texas-crime-stoppers-conference/) · Feb 2026 – Present · grades 11–12',
         bullets: [
-            'Ambassador for the state of Texas — 1 of 12.',
+            'Ambassador for the state of Texas, 1 of 12.',
             'Developed a free, open-source alternative to the P3 Tipping app to make that kind of technology more accessible (see OpenTip).',
             'Reached 1,000+ kids across Paris, Texas with the Crime Stoppers “Stop Crime” video series.',
         ],
@@ -228,10 +301,10 @@ export const honors = {
         {
             title: 'Competitions',
             bullets: [
-                '[Purple Comet Competition](https://purplecomet.org/results/2026): 1st place, Mixed Division — out of 4,000+ teams worldwide (team Radix Sort, Paris High). Grade 11.',
+                '[Purple Comet Competition](https://purplecomet.org/results/2026): 1st place, Mixed Division, out of 4,000+ teams worldwide (team Radix Sort, Paris High). Grade 11.',
                 '[USA Physics Olympiad qualifier](https://aapt.org/physicsteam/2026/upload/2026-USAPhO-Qualifiers-v3.pdf): ranked among the top 440 of 7,000 exam takers nationally. Grade 11.',
-                '[US National Chemistry Olympiad](photo:usnco): national exam qualifier — top 1,000 of 10,000+ nationwide. Grade 11.',
-                '[Genes In Space](https://www.genesinspace.org/news/blog/2026-Honorable-Mentions/): Honorable Mention — top 15 of 900+ teams nationwide. Grade 11.',
+                '[US National Chemistry Olympiad](photo:usnco): national exam qualifier, top 1,000 of 10,000+ nationwide. Grade 11.',
+                '[Genes In Space](https://www.genesinspace.org/news/blog/2026-Honorable-Mentions/): Honorable Mention, top 15 of 900+ teams nationwide. Grade 11.',
                 'Future Problem Solving: 3rd place at state in [Team Problem Solving](https://www.txfpsp.org/competitionresults/2024resultsstate/) and [Scenario Writing](https://myparistexas.com/paris-isd-students-earn-46-awards-at-state-future-problem-solving-competition/); international qualifier. Grades 9 and 11.',
                 '[Diamond Challenge](photo:diamond) semifinalist. Grade 11.',
                 'UIL Debate district winner 2x: [2025](https://theparisnews.com/news/paris-high-school-students-excel-at-district-academic-meet/article_5870aeb3-4523-4bc4-b4b9-1a470caa4c7b.html) and 2026. Grades 10 and 11.',
@@ -246,11 +319,11 @@ export const honors = {
             ],
         },
         {
-            title: 'Merit awards — each given to one student in the class',
+            title: 'Merit awards: each given to one student in the class',
             bullets: [
                 '[Honors Geometry](photo:merit-geometry) (grade 9)',
                 '[Honors Biology](photo:merit-biology) (grade 9)',
-                '[Honors Chemistry](photo:merit-chemistry) (grade 10) — plus the [Mole Day project](photo:mole-day)',
+                '[Honors Chemistry](photo:merit-chemistry) (grade 10), plus the [Mole Day project](photo:mole-day)',
                 '[Honors World History](photo:merit-world-history) (grade 10)',
                 'Dual Credit Spanish III (grade 10)',
                 '[AP Language & Composition](photo:merit-ap-lang) (grade 11)',
@@ -272,7 +345,7 @@ export const summer = [
         bullets: [
             'Took Calculus 1 and Art History, and volunteered 20 hrs.',
             'Made clay sculptures again.',
-            'Accepted to go on the summer trip for the second year in a row — 1 of 20 selected.',
+            'Accepted to go on the summer trip for the second year in a row, 1 of 20 selected.',
         ],
     },
     {
@@ -280,7 +353,7 @@ export const summer = [
         bullets: [
             'Took College Frameworks and volunteered 20 hrs.',
             '[Made clay sculptures.](photo:sculpting)',
-            '[Accepted to go on the summer trip — 1 of 20 selected.](photo:upward-bound)',
+            '[Accepted to go on the summer trip, 1 of 20 selected.](photo:upward-bound)',
         ],
     },
     {
@@ -297,17 +370,17 @@ export const skills = [
 ]
 
 export const press = [
-    { label: 'The Paris News — National Merit', url: 'https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html' },
-    { label: 'East Texas Radio — National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
-    { label: 'East Texas Radio — Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
-    { label: 'MyParisTexas — Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+    { label: 'The Paris News: National Merit', url: 'https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html' },
+    { label: 'East Texas Radio: National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
+    { label: 'East Texas Radio: Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+    { label: 'MyParisTexas: Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
 ]
 
 // Every photo on the site. Files live in public/photos/. Any text can link to one with [label](photo:id) —
 // hovering the word pops up the picture, clicking it opens it larger, and it never leaves the page.
 // To swap a picture, overwrite its file in public/photos/ (same name) and edit the caption here.
 export const photos = {
-    'robotics': { src: '/photos/robotics.jpg', w: 1400, h: 689, title: 'VEX Robotics', caption: 'Judges Award, VEX V5 Competition — Team 1394B.' },
+    'robotics': { src: '/photos/robotics.jpg', w: 1400, h: 689, title: 'VEX Robotics', caption: 'Judges Award, VEX V5 Competition, Team 1394B.' },
     'debate': { src: '/photos/debate.jpg', w: 647, h: 1400, title: 'Debate', caption: 'With the team after a tournament round.' },
     'boys-state': { src: '/photos/boys-state.jpg', w: 1400, h: 935, title: 'Texas Boys State', caption: 'Hutchings City at Texas Boys State, with the Texas State Capitol behind us.' },
     'upward-bound': { src: '/photos/upward-bound.jpg', w: 1400, h: 1050, title: 'Upward Bound', caption: 'On the Upward Bound trip.' },
@@ -315,12 +388,12 @@ export const photos = {
     'spanish-honor-society': { src: '/photos/spanish-honor-society.jpg', w: 1400, h: 1050, title: 'Spanish Honor Society', caption: 'Membership certificate, Sociedad Honoraria Hispánica de Paris High School.' },
     'fps': { src: '/photos/fps.jpg', w: 1050, h: 1400, title: 'Future Problem Solving', caption: '3rd Place, Creative Writing, Texas Future Problem Solving State Bowl.' },
     'catgut': { src: '/photos/catgut.jpg', w: 780, h: 1400, title: 'CatGut', caption: 'Running the flag onto the field at a football game.' },
-    'mole-day': { src: '/photos/mole-day.jpg', w: 1050, h: 1400, title: 'Honors Chemistry', caption: 'Mole Day project — a brownie cake decorated with Avogadro’s number.' },
+    'mole-day': { src: '/photos/mole-day.jpg', w: 1050, h: 1400, title: 'Honors Chemistry', caption: 'Mole Day project: a brownie cake decorated with Avogadro’s number.' },
     'usnco': { src: '/photos/usnco.png', w: 1400, h: 587, title: 'US National Chemistry Olympiad', caption: 'Qualification email from the Dallas/Fort Worth ACS Section Coordinator: a 57/60 on the Local Section Exam, advancing to the National Exam.' },
     'diamond': { src: '/photos/diamond.png', w: 1400, h: 561, title: 'Diamond Challenge', caption: 'Notification email confirming advancement to the 2026 Pitching Round.' },
     'ap-lang': { src: '/photos/ap-lang.png', w: 790, h: 340, title: 'AP English Language & Composition', caption: 'Official score report: 5.' },
     'ap-lit': { src: '/photos/ap-lit.png', w: 789, h: 332, title: 'AP English Literature & Composition', caption: 'Official score report: 5.' },
-    'olympiads': { src: '/photos/olympiads.png', w: 301, h: 241, title: 'Olympiads Democratized', caption: 'Discord community server, established March 2026 — 1,135 members at the time of this screenshot.' },
+    'olympiads': { src: '/photos/olympiads.png', w: 301, h: 241, title: 'Olympiads Democratized', caption: 'Discord community server, established March 2026. 1,135 members at the time of this screenshot.' },
     'merit-geometry': { src: '/photos/merit-geometry.jpg', w: 1400, h: 1088, title: 'Honors Geometry', caption: 'Merit Award, Paris High School, 2023–2024.' },
     'merit-biology': { src: '/photos/merit-biology.jpg', w: 1400, h: 1079, title: 'Honors Biology', caption: 'Merit Award, Paris High School, 2023–2024.' },
     'merit-chemistry': { src: '/photos/merit-chemistry.jpg', w: 1400, h: 1076, title: 'Chemistry', caption: 'Certificate of Merit, Pre-AP Chemistry, Paris High School, 2024–2025.' },
