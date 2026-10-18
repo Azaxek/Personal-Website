@@ -62,7 +62,7 @@ export const projects = [
         body: 'A completely free-to-set-up-and-use application with all the same features as the P3 Tipping app, which costs over $10,000. Releasing in February 2027.',
         facts: ['February 2026 – Present', 'Built as part of being a Texas Crime Stoppers Ambassador'],
         tags: ['Open source', 'Public safety'],
-        links: [{ label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenTip-Tipping-Application' }],
+        links: [{ label: 'Live demo', url: 'https://opentip-demo.vercel.app/' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenTip-Tipping-Application' }],
         more: [
             { h: 'Stack', body: [[
                 'The frontend uses Next.js 16, React 19, TypeScript, Tailwind, with Zod 4 for input validation.',
@@ -371,9 +371,13 @@ export const skills = [
 
 export const press = [
     { label: 'The Paris News: National Merit', url: 'https://theparisnews.com/free/phs-senior-arjan-khadka-2026-named-national-merit-commended-student/article_64d85fdc-93f0-42e2-a22d-0815166320ac.html' },
-    { label: 'East Texas Radio: National Merit', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-national-merit-commended-student/' },
     { label: 'East Texas Radio: Carson Scholar', url: 'https://easttexasradio.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
-    { label: 'MyParisTexas: Carson Scholar', url: 'https://myparistexas.com/paris-high-school-senior-arjan-khadka-named-carson-scholar/' },
+    { label: 'MyParisTexas: Genes in Space', url: 'https://myparistexas.com/paris-high-school-senior-earns-national-recognition-in-genes-in-space-competition/' },
+    { label: 'MyParisTexas: Crime Stoppers Conference', url: 'https://myparistexas.com/paris-isd-students-earn-top-honors-at-texas-crime-stoppers-conference/' },
+    { label: 'MyParisTexas: College Board Recognition', url: 'https://myparistexas.com/paris-high-school-celebrates-students-awarded-with-academic-honors-from-college-board-national-recognition-program-3/' },
+    { label: 'MyParisTexas: Future Problem Solving', url: 'https://myparistexas.com/paris-isd-students-earn-46-awards-at-state-future-problem-solving-competition/' },
+    { label: 'MyParisTexas: UIL District Meet', url: 'https://myparistexas.com/paris-high-school-excels-at-uil-district-academic-meet/' },
+    { label: 'eExtra News: Lamar County Spelling Bee', url: 'https://eextra.news/paris/2023/02/10/paris-junior-high-student-wins-lamar-county-spelling-bee-content-sponsored-by-quality-care-er/' },
 ]
 
 // Every photo on the site. Files live in public/photos/. Any text can link to one with [label](photo:id) —
