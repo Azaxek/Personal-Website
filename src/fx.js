@@ -1,4 +1,4 @@
-// Interaction layer for everything below the 3D hero: cursor, hover/scramble/word-tint, scroll reveals, tilt +
+// Interaction layer for everything below the 3D hero: cursor, hover word tint, scroll reveals, tilt +
 // spotlight cards, magnetic buttons, the "More info" panels, a draggable carousel (mouse, touch and two-finger
 // trackpad), a soft click ping and the photo hover preview. Motion is GSAP (+ its
 // SplitText/ScrambleText/Draggable/Inertia/Observer plugins); vanilla-tilt covers the tilt.
@@ -120,19 +120,7 @@ function initMore()
     })
 }
 
-// ---------- text: scramble on hover, word tint, decode prompts on scroll ----------
-
-// Only the short labels (nav, brand, contact buttons) re-type on hover, quickly and with plain letters —
-// body text and headings stay still so reading isn't distracting.
-function initScramble()
-{
-    if(reduced) return
-    $$('#top nav a, #top .brand, .links-row a').forEach((t) => {
-        if(t.children.length) return
-        const text = t.textContent
-        t.addEventListener('pointerenter', () => gsap.to(t, { duration: 0.35, ease: 'none', overwrite: true, scrambleText: { text, chars: 'lowerCase', speed: 1.2, revealDelay: 0.03 } }))
-    })
-}
+// ---------- text: word tint on hover, decode prompts on scroll ----------
 
 // Each word warms up as the cursor passes and fades back slowly (CSS .w).
 function initTextHover()
@@ -391,7 +379,6 @@ export function initFx()
     initNav()
     initProgress()
     initMore()
-    initScramble()
     initTextHover()
     initReveal()
     initHoverCards()

@@ -57,7 +57,7 @@ footer#foot { padding-bottom: 80px; }
     display: flex; align-items: center; gap: 14px;
     padding-top: 14px; padding-bottom: 14px;
     box-shadow: 0 1px 0 var(--line);
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 #top .dots { display: flex; gap: 6px; }
 #top .dots span { width: 10px; height: 10px; border-radius: 50%; display: block; }
@@ -68,7 +68,11 @@ footer#foot { padding-bottom: 80px; }
     font-weight: 700; font-size: 1rem;
     color: var(--ink);
 }
-#top nav { display: flex; gap: 12px; flex-wrap: wrap; margin-left: auto; }
+#top nav { display: flex; gap: 12px; flex-wrap: nowrap; margin-left: auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+#top nav::-webkit-scrollbar { display: none; }
+#top nav a { flex: none; white-space: nowrap; }
+#top nav a:focus-visible { outline-offset: -2px; }
+#top .brand, #top .dots { flex: none; }
 #top nav a {
     color: var(--dim); text-decoration: none; font-size: .8125rem;
     transition: color .2s ease;
