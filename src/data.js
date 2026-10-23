@@ -20,7 +20,7 @@ export const hero = {
     epigraph: { text: 'Do what you can, with what you have, where you are.', by: 'Theodore Roosevelt' },
     stats: [
         { n: 4000, suf: '+', label: 'teams worldwide: 1st place at Purple Comet, Mixed Division' },
-        { n: 1200, suf: '+', label: 'members in Olympiads Democratized' },
+        { n: 1100, suf: '+', label: 'members in Olympiads Democratized' },
         { n: 1000, suf: '+', label: 'hygiene products given out in Paris, TX' },
         { n: 120000, suf: '+', label: 'users reached organically at SYNK' },
     ],
@@ -209,7 +209,7 @@ export const leadership = [
         title: 'Olympiads Democratized', meta: 'President / Founder · grades 10–12',
         bullets: [
             'Founded an Olympiad equity org after failing the USAPhO qualifier, and set up a [completely anonymous Discord server](photo:olympiads).',
-            'Recruited 10+ mentors (USAMO / USAPhO / USACO) and grew the server to 1,200+ members.',
+            'Recruited 10+ mentors (USAMO / USAPhO / USACO) and grew the server to 1,100+ members.',
             'Active members self-reported 20 USAMO and 12 USAPhO qualifiers in the last olympiad season.',
         ],
     },
@@ -385,7 +385,7 @@ export const photos = {
     'diamond': { src: '/photos/diamond.png', w: 1400, h: 561, title: 'Diamond Challenge', caption: 'Notification email confirming advancement to the 2026 Pitching Round.' },
     'ap-lang': { src: '/photos/ap-lang.png', w: 790, h: 340, title: 'AP English Language & Composition', caption: 'Official score report: 5.' },
     'ap-lit': { src: '/photos/ap-lit.png', w: 789, h: 332, title: 'AP English Literature & Composition', caption: 'Official score report: 5.' },
-    'olympiads': { src: '/photos/olympiads.png', w: 301, h: 241, title: 'Olympiads Democratized', caption: 'Discord community server, established March 2026. 1,135 members at the time of this screenshot.' },
+    'olympiads': { src: '/photos/olympiads.jpg', w: 1152, h: 864, title: 'Olympiads Democratized', caption: 'Discord community server, established March 2026. 1,124 members at the time of this screenshot.' },
     'merit-geometry': { src: '/photos/merit-geometry.jpg', w: 1400, h: 1088, title: 'Honors Geometry', caption: 'Merit Award, Paris High School, 2023–2024.' },
     'merit-biology': { src: '/photos/merit-biology.jpg', w: 1400, h: 1079, title: 'Honors Biology', caption: 'Merit Award, Paris High School, 2023–2024.' },
     'merit-chemistry': { src: '/photos/merit-chemistry.jpg', w: 1400, h: 1076, title: 'Chemistry', caption: 'Certificate of Merit, Pre-AP Chemistry, Paris High School, 2024–2025.' },
