@@ -1,8 +1,10 @@
 import './style.css'
 import { lenis } from './smooth.js'
 import { initFx, onSwipe, bringFxToFront } from './fx.js'
-import { initIMacScene } from './imac-scene.js'
 import { owner, hero, education, projects, experience, leadership, honors, summer, skills, press, photos as photoData } from './data.js'
+
+// Three.js is most of the page's weight, so it loads as its own chunk, started right away but not blocking the text.
+const imacScene = import('./imac-scene.js')
 
 const $ = (sel, root = document) => root.querySelector(sel)
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)]
@@ -304,4 +306,4 @@ document.addEventListener('click', (e) => {
 
 build()
 initFx() // after build(): it wires up the DOM that build() just created
-initIMacScene({ pin: $('#imacPin'), container: $('#imacContainer'), loading: $('#imacLoading') })
+imacScene.then(({ initIMacScene }) => initIMacScene({ pin: $('#imacPin'), container: $('#imacContainer'), loading: $('#imacLoading') }))

@@ -8,6 +8,7 @@
 //   HANDOFF — with the screen filling frame, canvas + studio backdrop fade out onto the real page behind
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -236,7 +237,8 @@ export function initIMacScene({ pin, container, loading })
     const io = new IntersectionObserver(([e]) => { inView = e.isIntersecting })
     io.observe(pin)
 
-    new GLTFLoader().load('/models/imac.glb', (gltf) => {
+    // the model is meshopt-compressed (770 KB -> 126 KB), so the loader needs the decoder
+    new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load('/models/imac.glb', (gltf) => {
         if(disposed) return
         const root = gltf.scene
 
@@ -388,7 +390,8 @@ export function initIMacScene({ pin, container, loading })
             // refreshPriority + refresh: the model loads async, after the page's other triggers were
             // measured, so the pin spacer this adds has to push them down and re-measure everything.
             st = ScrollTrigger.create({
-                trigger: pin, start: 'top top', end: () => `+=${Math.round(window.innerHeight * 6)}`,
+                // the intro lasts this many screens of scrolling (was 6: about ten seconds; 3.3 is about five and a half)
+                trigger: pin, start: 'top top', end: () => `+=${Math.round(window.innerHeight * 3.3)}`,
                 pin: true, scrub: true, anticipatePin: 1, invalidateOnRefresh: true, animation: tl, refreshPriority: 1,
             })
             ScrollTrigger.refresh()
