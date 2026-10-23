@@ -152,6 +152,7 @@ function buildScene(container)
     renderer.toneMappingExposure = 1.1
     const isMobile = window.matchMedia('(max-width: 768px)').matches
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2))
+    renderer.domElement.setAttribute('aria-hidden', 'true') // decorative: everything on the screen is also real text further down
     container.appendChild(renderer.domElement)
 
     const scene = new THREE.Scene()

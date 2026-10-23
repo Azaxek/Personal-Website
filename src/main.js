@@ -15,13 +15,13 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&
 //   [label](https://url)  -> an article / outside page: opens in a new tab, marked with ↗
 //   [label](photo:id)     -> a photo: opens in the on-site viewer, never leaves the page
 const rich = (s) => esc(s).replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|photo:[a-z0-9-]+)\)/g, (_, label, target) => (target.startsWith('photo:')
-    ? `<a href="#photos" class="photo-link" data-photo="${target.slice(6)}" data-cursor="view">${label}</a>`
+    ? `<a href="/photos/${target.slice(6)}" class="photo-link" data-photo="${target.slice(6)}" data-cursor="view" aria-haspopup="dialog">${label}</a>`
     : `<a href="${target}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${label}</a>`))
 
 
-function prompt(cmd)
+function prompt(cmd, tag = 'p', label = '')
 {
-    return `<p class="prompt"><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span> <span class="cmd">${esc(cmd)}</span></p>`
+    return `<${tag} class="prompt"${label ? ` aria-label="${esc(label)}"` : ''}><span class="user">arjan@khadka</span> <span class="path">~</span> <span class="dollar">%</span> <span class="cmd">${esc(cmd)}</span></${tag}>`
 }
 
 // ---------- small renderers ----------
@@ -30,12 +30,6 @@ function entryLinks(links)
 {
     if(!links || !links.length) return ''
     return `<div class="entry-links">${links.map((l) => `<a href="${esc(l.url)}" class="ext" target="_blank" rel="noopener" title="Opens in a new tab">${esc(l.label)}</a>`).join('')}</div>`
-}
-
-function tagsRow(tags)
-{
-    if(!tags || !tags.length) return ''
-    return `<div class="tags">${tags.map((t) => `<span>${esc(t)}</span>`).join('')}</div>`
 }
 
 // "More info" under a project. `more` is a list of { h?: heading, body: [paragraph string | [bullet, ...], ...] }; fx.js opens/closes it.
@@ -63,7 +57,6 @@ function renderProject(p)
         <p class="body">${rich(p.body)}</p>
         ${p.note ? `<p class="note"># ${rich(p.note)}</p>` : ''}
         <ul>${(p.facts || []).map((f) => `<li>${rich(f)}</li>`).join('')}</ul>
-        ${tagsRow(p.tags)}
         ${entryLinks(p.links)}
         ${moreInfo(p.name, p.more)}
     `
@@ -79,7 +72,6 @@ function renderRole(r)
         <h3>${esc(r.title)}</h3>
         ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         ${body}${bullets}
-        ${tagsRow(r.tags)}
     `
     return e
 }
@@ -95,7 +87,6 @@ function renderCard(r)
         <h3>${esc(r.title)}</h3>
         ${r.meta ? `<p class="meta">${rich(r.meta)}</p>` : ''}
         <div class="clamp">${body}${bullets}</div>
-        ${tagsRow(r.tags)}
     `
     const clamp = $('.clamp', e)
     requestAnimationFrame(() => {
@@ -166,7 +157,7 @@ function renderLightbox()
     let box = $('#lightbox')
     if(!box) {
         // a modal <dialog> lives in the browser's top layer, so no transformed card or carousel can ever paint over it
-        box = document.createElement('dialog'); box.className = 'lightbox'; box.id = 'lightbox'
+        box = document.createElement('dialog'); box.className = 'lightbox'; box.id = 'lightbox'; box.setAttribute('aria-label', 'Photo viewer')
         document.body.appendChild(box)
         box.showModal()
         bringFxToFront() // the cursor must stay above the viewer
@@ -196,7 +187,7 @@ function section(id, command, contentEl)
 {
     const s = el('section')
     s.id = id
-    s.insertAdjacentHTML('beforeend', prompt(command))
+    s.insertAdjacentHTML('beforeend', prompt(command, 'h2', id[0].toUpperCase() + id.slice(1)))
     s.appendChild(contentEl)
     return s
 }
@@ -216,8 +207,10 @@ function renderBoot()
     const bioText = hero.bio.map((part) => (typeof part === 'string' ? part : part.b)).join('')
     b.innerHTML = `
         ${prompt('whoami')}
-        <p class="out">${esc(bioText)}</p>
+        <h1 class="out name">${esc(bioText)}</h1>
         <p class="out dim">${esc(hero.kicker)}</p>
+        <p class="out lead">I’m also:</p>
+        <ul class="out also">${hero.also.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
         ${prompt('cat mission.txt')}
         <p class="out">${esc(hero.tagline)}</p>
         <p class="out quote">"${esc(hero.epigraph.text)}" <span class="dim">- ${esc(hero.epigraph.by)}</span></p>
@@ -240,18 +233,6 @@ function renderBoot()
 function renderHonors()
 {
     const wrap = el('div')
-    // Endless marquee: the chips are listed twice and the track slides by exactly half its width.
-    const t = el('div', 'ticker')
-    const track = el('div', 'ticker-track')
-    for (let pass = 0; pass < 2; pass++) {
-        honors.ticker.forEach((label) => {
-            const chip = el('span', null, esc(label))
-            if(pass) chip.setAttribute('aria-hidden', 'true')
-            track.appendChild(chip)
-        })
-    }
-    t.appendChild(track)
-    wrap.appendChild(t)
     wrap.appendChild(list(honors.groups, renderRole))
     return wrap
 }
@@ -262,7 +243,7 @@ function renderSkills()
     skills.forEach((g) => {
         const grp = el('div', 'skill-group')
         grp.appendChild(el('h3', null, esc(g.title)))
-        grp.appendChild((() => { const d = el('div', 'tags'); g.tags.forEach((t) => d.appendChild(el('span', null, esc(t)))); return d })())
+        grp.appendChild(el('ul', null, g.items.map((t) => `<li>${esc(t)}</li>`).join('')))
         wrap.appendChild(grp)
     })
     return wrap
@@ -272,7 +253,7 @@ function renderContact()
 {
     const e = el('article', 'entry')
     e.innerHTML = `
-        <p class="body">Open to work, and always up for talking about education, safety, and building things for the community.</p>
+        <p class="body">Open to any opportunities available, and always interested in talking about project ideas!</p>
         <div class="links-row" style="margin-top:16px">
             <a href="mailto:${esc(owner.email)}">email</a>
             <a href="${esc(owner.linkedin)}" target="_blank" rel="noopener">linkedin</a>
@@ -299,7 +280,7 @@ function build()
 // A photo word opens its picture larger, in the on-site viewer (hovering it shows a preview — see fx.js).
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a[data-photo]')
-    if(!link) return
+    if(!link || e.button || e.metaKey || e.ctrlKey || e.shiftKey) return // ctrl/cmd-click still opens the photo's own page in a new tab
     e.preventDefault()
     openLightbox([link.dataset.photo], 0)
 })

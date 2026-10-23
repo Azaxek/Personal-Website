@@ -12,9 +12,10 @@ export const hero = {
     photo: null, // set to '/photo.jpg' (drop the file in public/) to show a real photo next to the bio
     kicker: 'Paris, Texas · Class of 2027',
     bio: [
-        'Hi, I’m ', { b: 'Arjan' },
-        ', a student researcher, civic-tech builder, and community organizer.',
+        'I’m ', { b: 'Arjan Khadka' },
+        ', a senior at Paris High.',
     ],
+    also: ['A student researcher', 'problem solver', 'community builder', 'extroverted', 'fun-loving'],
     tagline: 'My goal is to minimize structural violence, using technology and speech to get there.',
     epigraph: { text: 'Do what you can, with what you have, where you are.', by: 'Theodore Roosevelt' },
     stats: [
@@ -61,7 +62,6 @@ export const projects = [
         tagline: 'An open-source, free alternative to the P3 Tipping app',
         body: 'A completely free-to-set-up-and-use application with all the same features as the P3 Tipping app, which costs over $10,000. Releasing in February 2027.',
         facts: ['February 2026 – Present', 'Built as part of being a Texas Crime Stoppers Ambassador'],
-        tags: ['Open source', 'Public safety'],
         links: [{ label: 'Live demo', url: 'https://opentip-demo.vercel.app/' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenTip-Tipping-Application' }],
         more: [
             { h: 'Stack', body: [[
@@ -101,7 +101,6 @@ export const projects = [
         tagline: 'An AI-powered traffic light system, my Diamond Challenge submission',
         body: 'An AI-powered traffic light system trained to fit inside any camera a locality already has.',
         facts: ['November 2025 – March 2026', 'Diamond Challenge semifinalist'],
-        tags: ['AI', 'Civic tech'],
         links: [{ label: 'Live demo', url: 'https://azaxek.github.io/FlowState/' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/FlowState' }],
         more: [
             { h: 'Simulation', body: [
@@ -122,7 +121,6 @@ export const projects = [
         tagline: 'Reported 120+ vulnerabilities across 50 GitHub repositories',
         body: 'Used SAST (Static Application Security Testing) to find vulnerabilities across popular, weekly-trending GitHub repositories and reported them to the maintainers.',
         facts: ['October 2025 – August 2026'],
-        tags: ['Security', 'SAST'],
     },
     {
         name: 'FocusGuard', status: 'built',
@@ -135,14 +133,12 @@ export const projects = [
         tagline: 'Practice questions for AP Chemistry, which I maintain',
         body: 'Documented every AP packet the AP Chem instructor handed out and put them into a database for practice. Used a script to scrape the internet for more AP-style questions, and added 800+ questions across all of AP Chemistry.',
         facts: ['August 2026 – Present'],
-        tags: ['Education', 'Scraping'],
     },
     {
         name: 'NextStep', status: 'live',
         tagline: 'A career-exploration tool for students',
         body: 'A web platform, built for the Congressional App Challenge, that lets students explore possible career paths and get a personalized roadmap of careers, schools or training routes, and next steps.',
         facts: ['React + a deterministic recommendation engine (same answers, same plan)', 'Congressional App Challenge 2025'],
-        tags: ['React', 'Education'],
         links: [{ label: 'Open NextStep', url: 'https://thenextstep.vercel.app/' }],
         more: [
             { body: [
@@ -158,7 +154,6 @@ export const projects = [
         tagline: 'Paris, Texas city council meetings, in plain English',
         body: 'Fetches Paris, Texas city council agendas and minutes, summarizes them with an LLM, and shows them in a web app so residents can follow what their city is doing and when to speak up.',
         facts: ['LLM summaries (Groq, Llama 3.1), Supabase database, deployed on Vercel', 'Public repository on GitHub'],
-        tags: ['Civic tech', 'LLM summarization'],
         links: [{ label: 'Live demo', url: 'https://open-council-alpha.vercel.app/samples' }, { label: 'Code on GitHub', url: 'https://github.com/Azaxek/OpenCouncil' }],
         more: [
             { h: 'Stack', body: [[
@@ -191,7 +186,6 @@ export const experience = [
             'Developed a free, open-source alternative to the P3 Tipping app to make that kind of technology more accessible (see OpenTip).',
             'Reached 1,000+ kids across Paris, Texas with the Crime Stoppers “Stop Crime” video series.',
         ],
-        tags: ['Public safety', 'Community outreach'],
     },
     {
         title: 'Marketing Intern (unpaid)', meta: 'Synk.today · Mar – Jul 2026 · remote',
@@ -218,7 +212,6 @@ export const leadership = [
             'Recruited 10+ mentors (USAMO / USAPhO / USACO) and grew the server to 1,200+ members.',
             'Active members self-reported 20 USAMO and 12 USAPhO qualifiers in the last olympiad season.',
         ],
-        tags: ['Education', 'Community'],
     },
     {
         title: 'Project New Hope', meta: 'Co-President / Co-Founder · grades 10–12 · Paris, TX',
@@ -292,11 +285,6 @@ export const leadership = [
 ]
 
 export const honors = {
-    ticker: [
-        'Purple Comet: 1st place, Mixed Division', 'USA Physics Olympiad qualifier', 'US National Chemistry Olympiad qualifier',
-        'Genes In Space: Honorable Mention', 'Future Problem Solving: 3rd place state', 'Diamond Challenge semifinalist',
-        'UIL Debate: district winner 2x', 'VEX Robotics: state qualifier 2x', 'National Merit Commended', 'Carson Scholar',
-    ],
     groups: [
         {
             title: 'Competitions',
@@ -365,7 +353,7 @@ export const summer = [
 export const skills = [
     {
         title: 'Additional skills',
-        tags: ['Playing guitar · 2018 – present', 'Speaking Spanish · 2021 – present', 'Speaking Nepali · 2009 – present', 'Playing bass clarinet · 2023 – present', 'Swimming · 2016 – present'],
+        items: ['Playing guitar · 2018 – present', 'Speaking Spanish · 2021 – present', 'Speaking Nepali · 2009 – present', 'Playing bass clarinet · 2023 – present', 'Swimming · 2016 – present'],
     },
 ]
 

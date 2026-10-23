@@ -16,6 +16,8 @@
     --accent-dim: #2a6b52;
     --hover: color-mix(in srgb, var(--accent) 60%, var(--ink));
     --accent3: #69c6f2;
+    --accent-hi: color-mix(in srgb, var(--accent) 22%, #fff);
+    --accent3-hi: color-mix(in srgb, var(--accent3) 25%, #fff);
     --live: #56e0a0;
     --testing: #ffd166;
     --research: #6cb6ff;
@@ -149,7 +151,8 @@ a .w:hover { color: inherit; } /* words inside links keep the link's own color *
 
 /* ---------- terminal prompts ---------- */
 
-.prompt { margin: 0 0 10px; font-size: .9rem; }
+.prompt { margin: 0 0 10px; font-size: .9rem; font-weight: 400; }
+h1.name { font-size: 1rem; font-weight: 400; line-height: inherit; }
 section:not(.boot) > .prompt { margin-bottom: 20px; font-size: 1.4rem; line-height: 1.3; }
 section:not(.boot) > .prompt .cmd { font-weight: 600; }
 .prompt .user { color: var(--accent); }
@@ -167,6 +170,9 @@ section:not(.boot) > .prompt .cmd { font-weight: 600; }
 .boot .out { margin: 0 0 20px; color: var(--ink); opacity: .92; }
 .boot .out.dim { color: var(--dim); margin-top: -14px; }
 .boot .out.quote { font-style: italic; color: var(--ink-2); }
+.boot .out.lead { margin-bottom: 6px; }
+.boot .also { margin: 0 0 20px; padding-left: 1.2em; }
+.boot .also li { margin: .2em 0; }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 20px 28px; margin: 0 0 20px; }
 .stat b { display: block; font-size: 1.75rem; line-height: 1.2; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
@@ -192,24 +198,24 @@ section:not(.boot) > .prompt .cmd { font-weight: 600; }
    an article or outside page (opens a new tab) is green with ↗; a photo is blue with ▣ — hover it and the
    picture pops up (see .photo-peek), click it to see it larger. Both change color on hover. */
 a.ext {
-    color: var(--accent); text-decoration: underline; text-decoration-color: rgba(93, 255, 176, .4);
+    color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
     text-decoration-thickness: 1px; text-underline-offset: .22em; transition: color .2s ease, text-decoration-color .2s ease;
 }
 a.ext::after { content: '↗'; display: inline-block; margin-left: .2em; font-size: .85em; opacity: .85; transition: transform .2s ease; }
-a.ext:hover { color: #d6ffe9; text-decoration-color: currentColor; }
+a.ext:hover { color: var(--accent-hi); text-decoration-color: currentColor; }
 a.ext:hover::after { transform: translate(1px, -1px); }
 a.photo-link {
-    color: var(--accent3); text-decoration: underline dotted; text-decoration-color: rgba(90, 212, 255, .7);
+    color: var(--accent3); text-decoration: underline dotted; text-decoration-color: color-mix(in srgb, var(--accent3) 70%, transparent);
     text-decoration-thickness: 1px; text-underline-offset: .22em; transition: color .2s ease, text-decoration-color .2s ease;
 }
 a.photo-link::after { content: '▣'; margin-left: .3em; font-size: .72em; vertical-align: .1em; opacity: .8; }
-a.photo-link:hover, a.photo-link:focus-visible { color: #c4efff; text-decoration-style: solid; text-decoration-color: currentColor; }
+a.photo-link:hover, a.photo-link:focus-visible { color: var(--accent3-hi); text-decoration-style: solid; text-decoration-color: currentColor; }
 
 /* the preview that pops up over a photo word */
 .photo-peek {
     position: fixed; inset: auto; left: 0; top: 0; z-index: 300; margin: 0; overflow: visible; color: var(--ink); max-width: 292px; padding: 6px 6px 8px; pointer-events: none;
     background: #0b1110; border: 1px solid var(--line); border-radius: 10px; opacity: 0; transition: opacity .16s ease;
-    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, .7), 0 0 0 1px rgba(90, 212, 255, .1);
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, .7), 0 0 0 1px color-mix(in srgb, var(--accent3) 10%, transparent);
 }
 .photo-peek.open { opacity: 1; }
 .photo-peek img { display: block; border-radius: 6px; background: #0a0f0d; opacity: 0; transition: opacity .2s ease; }
@@ -232,8 +238,8 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
 .entry p.body, .card p.body { margin: .6em 0 0; color: var(--ink); opacity: .9; font-size: 1rem; text-wrap: pretty; }
 .entry p.body, .entry ul { max-width: 68ch; }
 .card p.body, .card ul { font-size: .9375rem; }
-.entry ul, .card ul { margin: .6em 0 0; padding-left: 1.2em; color: var(--ink); opacity: .9; font-size: 1rem; text-wrap: pretty; }
-.entry ul li, .card ul li { margin: .25em 0; }
+.entry ul, .card ul, .skill-group ul { margin: .6em 0 0; padding-left: 1.2em; color: var(--ink); opacity: .9; font-size: 1rem; text-wrap: pretty; }
+.entry ul li, .card ul li, .skill-group ul li { margin: .25em 0; }
 .entry h3, .card h3 { transition: color .2s ease; }
 .entry:hover h3, .card:hover h3 { color: var(--accent); }
 .card { transition: border-color .25s ease, box-shadow .25s ease; }
@@ -256,7 +262,7 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
     flex: 0 0 auto; width: min(300px, 78vw);
     background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 18px;
 }
-.card .clamp { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
+.card .clamp { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; overflow: clip; } /* clip, not just hidden: focus can scroll a hidden box, and that smears the text */
 .card.expanded .clamp { display: block; -webkit-line-clamp: unset; overflow: visible; }
 .see-more {
     display: block; margin-top: .5em; background: none; border: none; color: var(--accent);
@@ -274,10 +280,6 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
 .pill.built { --dot: var(--built); }
 
 .note { color: var(--dim); font-size: .875rem; margin: .5em 0 0; }
-
-.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: .7em; }
-.tags span { font-size: .75rem; color: var(--dim); border: 1px solid var(--line); padding: .2em .55em; border-radius: 4px; transition: color .2s ease, border-color .2s ease; }
-.entry:hover .tags span, .card:hover .tags span { color: var(--ink-2); border-color: var(--accent-dim); }
 
 .entry-links { margin-top: .6em; display: flex; gap: 8px 18px; flex-wrap: wrap; }
 .entry-links a { font-size: .9375rem; }
@@ -315,22 +317,6 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
     .lb-prev, .lb-next { width: 38px; height: 38px; font-size: 1.3rem; }
 }
 
-/* ticker: endless marquee (chips are listed twice, the track slides exactly half its width) */
-.ticker {
-    overflow: hidden; margin-bottom: 20px; padding: 6px 0;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-}
-.ticker-track { display: flex; gap: 8px; width: max-content; animation: marquee 55s linear infinite; }
-.ticker:hover .ticker-track { animation-play-state: paused; }
-@keyframes marquee { to { transform: translateX(calc(-50% - 4px)); } }
-@media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } .ticker { overflow-x: auto; } }
-.ticker span {
-    flex: none; white-space: nowrap;
-    font-size: .8125rem; color: var(--ink); background: var(--paper);
-    border: 1px solid var(--line); padding: .35em .7em; border-radius: 4px;
-}
-
 /* skills */
 .skill-group { margin-bottom: 18px; }
 .skill-group h3 { font-size: 1rem; font-weight: 700; margin: 0 0 8px; color: var(--ink-2); }
@@ -350,11 +336,23 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
 #foot nav a:hover { color: var(--accent); }
 #foot nav a.photos-link { color: var(--accent3); }
 #foot nav a.photos-link::before { content: '▣'; margin-right: .4em; font-size: .75em; vertical-align: .08em; opacity: .8; }
-#foot nav a.photos-link:hover { color: #c4efff; }
+#foot nav a.photos-link:hover { color: var(--accent3-hi); }
 
 @media (max-width: 560px) {
-    #top nav { gap: 10px; }
     .stats { gap: 20px; }
+    /* one slim row: the brand, then the section links in a row that scrolls sideways */
+    #top { flex-wrap: nowrap; gap: 10px; padding-top: 4px; padding-bottom: 4px; }
+    #top .dots { display: none; }
+    #top .brand { flex: none; }
+    #top nav { position: relative; flex: 1; min-width: 0; flex-wrap: nowrap; margin-left: 0; gap: 0; overflow-x: auto; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent); }
+    #top nav::-webkit-scrollbar { display: none; }
+    #top nav a { flex: none; padding: 0 8px; }
+}
+/* every tap target at least 44px tall on touch screens */
+@media (pointer: coarse), (max-width: 560px) {
+    #top nav a, #foot nav a, .entry-links a, .seen-in a, .links-row a, .see-more, .more-btn { display: inline-flex; align-items: center; min-height: 44px; }
+    .carousel-controls button { flex: none; width: 44px; height: 44px; }
+    #top nav a, #foot nav a { min-width: 44px; justify-content: center; }
 }
 
 /* ---------- the hidden photo list (photos/index.html + src/photos-page.js) ---------- */
@@ -365,7 +363,7 @@ section { padding: 40px 0; border-top: 1px dashed var(--line); }
 .photo-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: rgba(13, 18, 24, .5); }
 .photo-list li { display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-top: 1px solid var(--line); transition: background .2s ease; }
 .photo-list li:first-child { border-top: 0; }
-.photo-list li:hover { background: rgba(93, 255, 176, .045); }
+.photo-list li:hover { background: color-mix(in srgb, var(--accent) 4.5%, transparent); }
 .photo-list .thumb { flex: none; display: block; }
 .photo-list .thumb img { display: block; width: 76px; height: 57px; object-fit: cover; object-position: 50% 28%; border-radius: 5px; border: 1px solid var(--line); background: #0a0f0d; }
 .photo-list.records .thumb img { object-fit: contain; object-position: center; }
@@ -379,8 +377,8 @@ button.copy {
     flex: none; font: inherit; font-size: .74rem; color: var(--accent); background: none; border: 1px solid var(--line);
     padding: .4em .85em; border-radius: 4px; cursor: pointer; white-space: nowrap; transition: border-color .2s ease, color .2s ease, background .2s ease;
 }
-button.copy:hover { border-color: var(--accent); background: rgba(93, 255, 176, .07); }
-button.copy.done { color: #d6ffe9; border-color: var(--accent); }
+button.copy:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
+button.copy.done { color: var(--accent-hi); border-color: var(--accent); }
 
 .photo-page { padding: 28px 0 40px; }
 .photo-page .back { font-size: .82rem; color: var(--dim); }
@@ -403,13 +401,11 @@ button.copy.done { color: #d6ffe9; border-color: var(--accent); }
 
 /* ---------- hover: every small thing answers the cursor, softly (color and border only, nothing moves or glows) ---------- */
 
-.stat span, .pill, .ticker span, .prompt .cmd, .see-more, .entry .meta, .card .meta, .skill-group h3, .photo-list .thumb img, .photo-page .full img {
+.stat span, .pill, .prompt .cmd, .see-more, .entry .meta, .card .meta, .skill-group h3, .photo-list .thumb img, .photo-page .full img {
     transition: color .25s ease, border-color .25s ease;
 }
 .stat:hover span { color: var(--ink); }
 .pill:hover { border-color: var(--dim); color: var(--ink); }
-.entry .tags span:hover, .card .tags span:hover { color: var(--ink); border-color: var(--dim); }
-.ticker span:hover { border-color: var(--dim); }
 .entry:hover .meta, .card:hover .meta, .skill-group:hover h3 { color: var(--ink-2); }
 .see-more:hover { text-decoration: underline; text-underline-offset: .2em; }
 .photo-list li:hover .thumb img, .photo-page .full img:hover { border-color: var(--accent-dim); }
@@ -422,7 +418,7 @@ button.copy.done { color: #d6ffe9; border-color: var(--accent); }
 }
 .more-btn::after { content: '▾'; display: inline-block; margin-left: .55em; transition: transform .3s ease; }
 .more-btn[aria-expanded="true"]::after { transform: rotate(180deg); }
-.more-btn:hover { border-color: var(--accent); background: rgba(93, 255, 176, .07); }
+.more-btn:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, transparent); }
 .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s ease; }
 .more.open { grid-template-rows: 1fr; }
 .more-inner { min-height: 0; overflow: hidden; visibility: hidden; transition: visibility 0s .45s; } /* hidden = out of the tab order too */

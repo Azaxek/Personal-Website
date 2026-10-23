@@ -47,7 +47,7 @@ export function bringFxToFront()
 // ---------- cursor: dot + lagging ring that morphs over links / the carousel / photos ----------
 
 // over anything that isn't a link, the ring still answers — a small, faint swell
-const SOFT = '.entry, .card, .skill-group, .stat, .prompt, .boot .out, .ticker, .legend, .photo-list li, .photo-page img'
+const SOFT = '.entry, .card, .skill-group, .stat, .prompt, .boot .out, .legend, .photo-list li, .photo-page img'
 
 function initCursor()
 {
@@ -89,7 +89,11 @@ function initNav()
             if(lenis) lenis.scrollTo(sec, { offset: -64, duration: 2, easing: (t) => 1 - Math.pow(1 - t, 4) })
             else sec.scrollIntoView()
         })
-        ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onToggle: (s) => a.classList.toggle('active', s.isActive) })
+        ScrollTrigger.create({ trigger: sec, start: 'top 55%', end: 'bottom 55%', onToggle: (s) => {
+                a.classList.toggle('active', s.isActive)
+                const row = a.closest('#top nav')
+                if(s.isActive && row && row.scrollWidth > row.clientWidth) row.scrollTo({ left: a.offsetLeft - 16, behavior: 'smooth' })
+            } })
     })
 }
 
@@ -145,7 +149,7 @@ function initReveal()
         $$('b[data-count]').forEach((b) => { b.textContent = (+b.dataset.count).toLocaleString('en-US') + b.textContent.replace(/[\d,]/g, '') })
         return
     }
-    const sel = '.boot .out, .stats, .links-row, .seen-in, .entry, .card, .skill-group, .quote-entry, .ticker'
+    const sel = '.boot .out, .stats, .links-row, .seen-in, .entry, .card, .skill-group, .quote-entry'
     gsap.set(sel, { autoAlpha: 0, y: 28 })
     ScrollTrigger.batch(sel, {
         start: 'top 90%', once: true,
@@ -222,6 +226,21 @@ function initCarousels()
             resting = next; ourSlide = true
             gsap.to(track, { x: next, duration: 0.8, ease: 'power3.out', overwrite: true, onUpdate: () => drag.update(), onComplete: () => { ourSlide = false } })
         }
+        // Keyboard focus inside a card brings that card into view (the track is clipped, so focus would otherwise land on something unseen).
+        track.addEventListener('focusin', (e) => {
+            const card = e.target.closest('.card')
+            if(!card || !cards.includes(card)) return
+            view.scrollLeft = 0 // the browser may try to scroll the clipped box itself; the track does the moving
+            // focus inside a card's clipped text (past the "see more" fold): open the card so the focused link is actually visible
+            const clamp = e.target.closest('.clamp')
+            if(clamp && !card.classList.contains('expanded') && e.target.getBoundingClientRect().bottom > clamp.getBoundingClientRect().bottom + 1) card.querySelector('.see-more')?.click()
+            const v = view.getBoundingClientRect(), r = card.getBoundingClientRect()
+            if(r.left >= v.left - 1 && r.right <= v.right + 1) return
+            const pad = parseFloat(getComputedStyle(track).paddingLeft) || 0
+            const next = nearest(-Math.min(maxX, Math.max(0, card.offsetLeft - pad)))
+            resting = next; ourSlide = true
+            gsap.to(track, { x: next, duration: 0.5, ease: 'power3.out', overwrite: true, onUpdate: () => drag.update(), onComplete: () => { ourSlide = false } })
+        })
         $('.prev', wrap).addEventListener('click', () => go(-1))
         $('.next', wrap).addEventListener('click', () => go(1))
 
@@ -291,15 +310,6 @@ function initPhotoPeek()
     const img = $('img', peek), title = $('b', peek), cap = $('span', peek)
     const MAX_W = 280, MAX_H = 300
     let current = null, hideTimer = 0, closeTimer = 0
-
-    // Fetch each photo's file as its word scrolls near the screen, so the preview is instant when hovered.
-    const warm = new IntersectionObserver((hits) => hits.forEach((h) => {
-        if(!h.isIntersecting) return
-        const p = photoData[h.target.dataset.photo]
-        if(p) new Image().src = p.src
-        warm.unobserve(h.target)
-    }), { rootMargin: '500px' })
-    $$('a.photo-link').forEach((a) => warm.observe(a))
 
     // fade out, then (only if it hasn't been re-opened meanwhile) take it out of the top layer
     const conceal = () => {
