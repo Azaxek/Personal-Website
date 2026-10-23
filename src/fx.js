@@ -1,8 +1,7 @@
-// Interaction layer for everything below the 3D hero: cursor, hover/scramble/word-glow, scroll
-// reveals, tilt + spotlight cards, magnetic buttons, a draggable carousel (mouse, touch and
-// two-finger trackpad), a soft click ping and a cursor-reactive particle backdrop. Motion is GSAP
-// (+ its SplitText/ScrambleText/Draggable/Inertia/Observer plugins); vanilla-tilt and tsParticles
-// cover the rest.
+// Interaction layer for everything below the 3D hero: cursor, hover/scramble/word-tint, scroll reveals, tilt +
+// spotlight cards, magnetic buttons, the "More info" panels, a draggable carousel (mouse, touch and two-finger
+// trackpad), a soft click ping and the photo hover preview. Motion is GSAP (+ its
+// SplitText/ScrambleText/Draggable/Inertia/Observer plugins); vanilla-tilt covers the tilt.
 // Everything is gated on prefers-reduced-motion, and the pointer-only bits on a real mouse.
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -23,7 +22,6 @@ const mk = (tag, cls) => { const e = document.createElement(tag); e.className = 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 const GLYPHS = '01{}<>/\\_$#%&*'
-const COLORS = ['#5dffb0', '#5ad4ff', '#ff6bd6', '#ffd166']
 
 // The cursor and the click ping live in one popover, i.e. the browser's top layer: carousel cards (which slide and
 // tilt, so the browser draws them as separate GPU layers) can never paint over them. A popover opened later sits
@@ -118,7 +116,7 @@ function initMore()
     })
 }
 
-// ---------- text: scramble on hover, word-glow trail, decode prompts on scroll ----------
+// ---------- text: scramble on hover, word tint, decode prompts on scroll ----------
 
 // Only the short labels (nav, brand, contact buttons) re-type on hover, quickly and with plain letters —
 // body text and headings stay still so reading isn't distracting.
@@ -132,7 +130,7 @@ function initScramble()
     })
 }
 
-// Each word lights up as the cursor passes and fades back slowly, leaving a glowing trail (CSS .w).
+// Each word warms up as the cursor passes and fades back slowly (CSS .w).
 function initTextHover()
 {
     if(!fine || reduced) return
@@ -175,7 +173,7 @@ function initReveal()
 function initHoverCards()
 {
     if(!fine || reduced) return
-    VanillaTilt.init($$('.card'), { max: 3, speed: 700, glare: true, 'max-glare': 0.08, scale: 1, perspective: 1200 }) // a gentle lean, no scale-up
+    VanillaTilt.init($$('.card'), { max: 3, speed: 700, scale: 1, perspective: 1200 }) // a gentle lean: no scale-up, no glare
     VanillaTilt.init($$('.stat'), { max: 4, speed: 700, scale: 1, perspective: 900 })
     $$('.entry, .card, .skill-group').forEach((e) => e.addEventListener('pointermove', (ev) => {
         const r = e.getBoundingClientRect()
@@ -360,6 +358,7 @@ function initPhotoPeek()
     window.addEventListener('scroll', () => { if(current) conceal() }, { passive: true }) // it's anchored to the word, so drop it when the page moves
 }
 
+
 // ---------- click: a soft phosphor "ping" — a thin ring spreads from the pointer while a dot fades ----------
 
 function initClickFx()
@@ -375,36 +374,6 @@ function initClickFx()
     })
 }
 
-// ---------- backdrop: faint constellation that links to the cursor and spawns on click ----------
-
-async function initBackground()
-{
-    if(reduced) return
-    const host = mk('div', '')
-    host.id = 'bg-particles'
-    document.body.prepend(host)
-    const [{ tsParticles }, { loadSlim }] = await Promise.all([import('@tsparticles/engine'), import('@tsparticles/slim')])
-    await loadSlim(tsParticles)
-    await tsParticles.load({
-        id: 'bg-particles', element: host,
-        options: {
-            fullScreen: { enable: false }, fpsLimit: 40, detectRetina: true, background: { color: 'transparent' },
-            particles: {
-                number: { value: fine ? 46 : 22, limit: { value: 90, mode: 'delete' } },
-                color: { value: COLORS.slice(0, 3) },
-                opacity: { value: { min: 0.15, max: 0.45 } },
-                size: { value: { min: 1, max: 2.4 } },
-                move: { enable: true, speed: 0.4, outModes: { default: 'out' } },
-                links: { enable: true, distance: 140, color: '#5dffb0', opacity: 0.1, width: 1 },
-            },
-            interactivity: {
-                detectsOn: 'window',
-                events: { onHover: { enable: true, mode: ['grab', 'repulse'] }, onClick: { enable: true, mode: 'push' } },
-                modes: { grab: { distance: 170, links: { opacity: 0.35 } }, repulse: { distance: 90, duration: 0.4 }, push: { quantity: 3 } },
-            },
-        },
-    })
-}
 
 export function initFx()
 {
@@ -419,7 +388,6 @@ export function initFx()
     initCarousels()
     initPhotoPeek()
     initClickFx()
-    initBackground().catch((err) => console.warn('particles backdrop failed', err))
     // SplitText + web fonts both change layout after the triggers above were measured.
     document.fonts?.ready.then(() => ScrollTrigger.refresh())
     ScrollTrigger.refresh()
